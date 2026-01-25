@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contacts</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/modals.css">
+</head>
+<body>
+
+<div class="card">
+  <h2>Contacts</h2>
+
+  <div class="top-buttons">
+    <button onclick="openAddModal()">ADD</button>
+    <button onclick="signOut()">Sign Out</button>
+    <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchContacts()">
+  </div>
+
+  <div id="contactList"></div>
+  <div id="emptyMessage">Please add a contact</div>
+</div>
+
+<!-- Add Contact Modal -->
+<div id="addContactModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Add Contact</h3>
+    <label>First Name</label>
+    <input type="text" id="addFirstName">
+    <label>Last Name</label>
+    <input type="text" id="addLastName">
+    <label>Email</label>
+    <input type="text" id="addEmail">
+    <label>Phone</label>
+    <input type="text" id="addPhone">
+    <p class="error" id="addError"></p>
+    <button onclick="submitAddContact()">Submit</button>
+    <button onclick="closeAddModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- Edit Contact Modal -->
+<div id="editContactModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Edit Contact</h3>
+    <label>First Name</label>
+    <input type="text" id="editFirstName">
+    <label>Last Name</label>
+    <input type="text" id="editLastName">
+    <label>Email</label>
+    <input type="text" id="editEmail">
+    <label>Phone</label>
+    <input type="text" id="editPhone">
+    <p class="error" id="editError"></p>
+    <button onclick="submitEditContact()">Save</button>
+    <button onclick="closeEditModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="modal hidden">
+  <div class="modal-content">
+    <p>Are you sure you want to delete this contact?</p>
+    <button onclick="confirmDelete()">Yes</button>
+    <button onclick="closeDeleteModal()">No</button>
+  </div>
+</div>
+
+<!-- Contact Added Modal -->
+<div id="contactAddedModal" class="modal hidden">
+  <div class="modal-content">
+    <p>Contact added successfully!</p>
+    <button onclick="closeContactAddedModal()">OK</button>
+  </div>
+</div>
+
+<script src="../js/app.js"></script>
+</body>
+</html>
