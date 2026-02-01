@@ -1,10 +1,31 @@
 // --- LOGIN & SIGNUP ---
+// Parameters
+let accountCreated = false;
+
+// Functions
 function goToSignup() {
   window.location.href = "signup.html";
 }
 
 function goToLogin() {
+  sessionStorage.setItem("accountCreated", accountCreated.toString());
   window.location.href = "login.html";
+}
+
+// Use to display a message to the user upon returning to login.html
+// Handles successful and unsuccessful account creation.
+function handleReturnFromSignup() {
+  const accNotif = document.getElementById("accountCreatedNotif");
+  accountCreated = sessionStorage.getItem("accountCreated") === "true";
+
+  if (accountCreated) {
+    accNotif.textContent = "You successfully created an account. Proceed to Log in.";
+    accNotif.style.display = 'block';
+  }
+  else {
+    // Nothing to do
+  }
+  sessionStorage.removeItem("accountCreated"); // Prevents false positives
 }
 
 function handleLogin() {
@@ -24,7 +45,7 @@ function handleLogin() {
   // Fake login
   if (email && password) {
     localStorage.setItem("user", JSON.stringify({ email }));
-    window.location.href = "contacts.html";
+    window.location.href = "contact.html";
   } else {
     document.getElementById("loginServerError").innerText = "Invalid login";
   }
@@ -43,6 +64,11 @@ function handleSignup() {
     return;
   }
 
+  // More should go here that actually creates the account in the DB.
+  accountCreated = true; // This is used upon redirect to login.html
+
+  // This line below need to be replaced or removed, as well as its references.
+  // handleReturnFromSignup() fulfills it's job in a less intrusive manner.
   document.getElementById("signupSuccessModal").classList.remove("hidden");
 }
 

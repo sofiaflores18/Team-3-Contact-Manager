@@ -25,6 +25,6 @@ function goToSignup() {
 }
 
 function goToContact() {
-  window.location.href = "Contact.html";
+  window.location.href = "contact.html";
 }
 

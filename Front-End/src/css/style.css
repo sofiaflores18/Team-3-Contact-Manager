@@ -5,6 +5,7 @@ input { width:100%; padding:8px; margin-top:3px; }
 button { width:100%; margin-top:10px; padding:8px; }
 button.secondary { background:#ddd; }
 .error { color:red; font-size:12px; margin:0; }
+.notif { color:royalblue; font-size:12px; margin-bottom:0; display:none; text-align:center; }
 .top-buttons { display:flex; gap:5px; margin-bottom:10px; }
 .contact-item { background:#eee; padding:5px; margin-top:5px; cursor:pointer; border-radius:3px; }
 #emptyMessage { margin-top:10px; font-style:italic; }
