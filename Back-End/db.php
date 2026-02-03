@@ -7,11 +7,13 @@ $db = "contactManager";
 
 $conn = new mysqli($host, $user, $password, $db);
 
-if ($conn->connect_error){
+if ($conn->connect_error)
+{
     die("Connection Error: ". $conn->connect_error);
 }
 
-else{
+else
+{
     echo "Connection to database succeeded!";
 }
 

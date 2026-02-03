@@ -4,7 +4,8 @@ require "db.php";
 
 $action = $_POST['action'] ?? '';
 
-switch ($action){
+switch ($action)
+{
     case 'signup':
         //signup logic
         $firstname = $_POST['firstname'];
