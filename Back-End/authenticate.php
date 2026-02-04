@@ -1,7 +1,7 @@
 <?php
+session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
 require "db.php";
-session_start(); //use this so we can access $_SESSION
 
 $action = $_POST['action'] ?? '';
 

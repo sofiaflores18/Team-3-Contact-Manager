@@ -1,8 +1,13 @@
 <?php
+session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
 require "db.php";
 
-session_start(); //use this so we can access $_SESSION
+if (!isset($_SESSION['user_id'])) {
+        echo json_encode(["status" => "failed", "error" => "Not authenticated"]);
+        exit;
+    }
+
 
 $action = $_POST['action'] ?? '';
 
@@ -27,7 +32,23 @@ switch ($action)
 
     case ("read"):
         //read contact logic
-        break;
+        $all_contacts = $conn->query("
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'id', id,
+                'firstname', firstname,
+                'lastname', lastname,
+                'email', email,
+                'phone', phone,
+                'user_id', user_id,
+                'created', created
+            )
+        ) AS contacts
+        FROM contacts;
+        ");
+
+        echo $all_contacts;
+        return $all_contacts;
 
     case ("update"):
         //update contact logic
