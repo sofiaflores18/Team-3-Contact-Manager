@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json");
 require "db.php";
+session_start(); //use this so we can access $_SESSION
 
 $action = $_POST['action'] ?? '';
 
@@ -21,7 +22,12 @@ switch ($action)
         VALUES ('$firstname', '$lastname', '$username', '$email', '$phone', '$password_user', '$created')
         ");
 
-        echo json_encode(["status"=>"ok", "user_id" => $conn->insert_id]);
+
+        //Store the user_id from the id generated when inserting this user into mysql
+        $user_id = $conn->insert_id;
+        $_SESSION['user_id'] = $user_id;
+
+        echo json_encode(["status" => "success", "user_id" => $user_id]);
         break;
     
     case 'login':
@@ -29,6 +35,7 @@ switch ($action)
         break;
     
     default:
+        echo json_encode(["status"=>"failed", "key_error"=>"unknown action"]);
         break;
 }
 
