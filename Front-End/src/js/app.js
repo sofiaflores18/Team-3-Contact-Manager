@@ -55,11 +55,13 @@ function handleSignup() {
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
   const username = document.getElementById("signupUsername").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const phoneNumber = document.getElementById("signupNumber").value.trim();
   const password = document.getElementById("signupPassword").value.trim();
   const error = document.getElementById("signupError");
   error.innerText = "";
 
-  if (!firstName || !lastName || !username || !password) {
+  if (!firstName || !lastName || !username || !password || !email ||!phoneNumber) {
     error.innerText = "All fields are required";
     return;
   }
