@@ -55,33 +55,50 @@ function handleSignup() {
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
   const username = document.getElementById("signupUsername").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const phoneNumber = document.getElementById("signupNumber").value.trim();
   const password = document.getElementById("signupPassword").value.trim();
   const error = document.getElementById("signupError");
   error.innerText = "";
 
-  if (!firstName || !lastName || !username || !password) {
+  if (!firstName || !lastName || !username || !password || !email ||!phoneNumber) {
     error.innerText = "All fields are required";
     return;
   }
 
   // More should go here that actually creates the account in the DB.
   accountCreated = true; // This is used upon redirect to login.html
-
+  goToLogin();
   // This line below need to be replaced or removed, as well as its references.
   // handleReturnFromSignup() fulfills it's job in a less intrusive manner.
-  document.getElementById("signupSuccessModal").classList.remove("hidden");
+  
+
 }
 
 // --- CONTACTS ---
 let contacts = [];
 let editIndex = null;
 
-function openAddModal() {
-  document.getElementById("addContactModal").classList.remove("hidden");
+
+
+function openAddForm()
+{
+  document.getElementById("addContactForm").classList.remove("hidden");
 }
 
-function closeAddModal() {
-  document.getElementById("addContactModal").classList.add("hidden");
+function closeAddForm()
+{
+  document.getElementById("addContactForm").classList.add("hidden");
+  clearAddForm();
+}
+
+function clearAddForm()
+{
+  document.getElementById("addFirstName").value = "";
+  document.getElementById("addLastName").value = "";
+  document.getElementById("addEmail").value = "";
+  document.getElementById("addPhone").value = "";
+  document.getElementById("addError").innerText = "";
 }
 
 function submitAddContact() {
@@ -98,14 +115,13 @@ function submitAddContact() {
   }
 
   contacts.push({ firstName: f, lastName: l, email: e, phone: p, date: new Date().toLocaleDateString() });
-  closeAddModal();
-  document.getElementById("contactAddedModal").classList.remove("hidden");
+  closeAddForm();
+  clearAddForm();
+  // in here I suggest we wait for a message from the back end to see if contacts were added successfully in order to output a message
   renderContacts();
 }
 
-function closeContactAddedModal() {
-  document.getElementById("contactAddedModal").classList.add("hidden");
-}
+
 
 // --- RENDER CONTACT LIST ---
 function renderContacts() {
@@ -120,25 +136,34 @@ function renderContacts() {
   contacts.forEach((c, index) => {
     const div = document.createElement("div");
     div.className = "contact-item";
-    div.innerText = `${c.firstName} ${c.lastName} - ${c.email}`;
-    div.onclick = () => openEditModal(index);
+    div.innerText = `${c.firstName} ${c.lastName} - ${c.phone} - ${c.email}`;
+    div.onclick = () => openEditForm(index);  // Changed from openEditModal
     list.appendChild(div);
   });
 }
 
 // --- EDIT CONTACT ---
-function openEditModal(index) {
+function openEditForm(index) {  // Renamed from openEditModal
   editIndex = index;
   const c = contacts[index];
   document.getElementById("editFirstName").value = c.firstName;
   document.getElementById("editLastName").value = c.lastName;
   document.getElementById("editEmail").value = c.email;
   document.getElementById("editPhone").value = c.phone;
-  document.getElementById("editContactModal").classList.remove("hidden");
+  document.getElementById("editContactForm").classList.remove("hidden");  
 }
 
-function closeEditModal() {
-  document.getElementById("editContactModal").classList.add("hidden");
+function closeEditForm() {  // Renamed from closeEditModal
+  document.getElementById("editContactForm").classList.add("hidden"); 
+  clearEditForm();  
+}
+
+function clearEditForm() {  // Optional helper function
+  document.getElementById("editFirstName").value = "";
+  document.getElementById("editLastName").value = "";
+  document.getElementById("editEmail").value = "";
+  document.getElementById("editPhone").value = "";
+  document.getElementById("editError").innerText = "";
 }
 
 function submitEditContact() {
@@ -155,7 +180,7 @@ function submitEditContact() {
   }
 
   contacts[editIndex] = { ...contacts[editIndex], firstName: f, lastName: l, email: e, phone: p };
-  closeEditModal();
+  closeEditForm();  // Changed from closeEditModal
   renderContacts();
 }
 
