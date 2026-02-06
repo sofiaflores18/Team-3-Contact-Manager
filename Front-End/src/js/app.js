@@ -153,7 +153,6 @@ function renderContacts(list = contacts) {
 
     const span = document.createElement("span");
     span.innerText = `${c.firstName} ${c.lastName} - ${c.phone} -${c.email}`;
-    span.onclick = () => openEditForm(index); 
 
     const delBtn = document.createElement("button");
     delBtn.innerText = "Delete";
@@ -162,8 +161,15 @@ function renderContacts(list = contacts) {
       openDeleteModal(index); 
     };
 
+    const editBtn = document.createElement("Button");
+    editBtn.innerText = "Edit";
+    editBtn.onclick = () => 
+      {
+        openEditForm(index); 
+      }
     div.appendChild(span);
     div.appendChild(delBtn);
+    div.appendChild(editBtn);
     container.appendChild(div);
   });
 }
