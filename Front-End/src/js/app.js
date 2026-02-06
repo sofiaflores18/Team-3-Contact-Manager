@@ -1,8 +1,6 @@
 // --- LOGIN & SIGNUP ---
-// Parameters
 let accountCreated = false;
 
-// Functions
 function goToSignup() {
   window.location.href = "signup.html";
 }
@@ -12,8 +10,6 @@ function goToLogin() {
   window.location.href = "login.html";
 }
 
-// Use to display a message to the user upon returning to login.html
-// Handles successful and unsuccessful account creation.
 function handleReturnFromSignup() {
   const accNotif = document.getElementById("accountCreatedNotif");
   accountCreated = sessionStorage.getItem("accountCreated") === "true";
@@ -22,10 +18,7 @@ function handleReturnFromSignup() {
     accNotif.textContent = "You successfully created an account. Proceed to Log in.";
     accNotif.style.display = 'block';
   }
-  else {
-    // Nothing to do
-  }
-  sessionStorage.removeItem("accountCreated"); // Prevents false positives
+  sessionStorage.removeItem("accountCreated");
 }
 
 function handleLogin() {
@@ -42,7 +35,6 @@ function handleLogin() {
     return;
   }
 
-  // Fake login
   if (email && password) {
     localStorage.setItem("user", JSON.stringify({ email }));
     window.location.href = "contact.html";
@@ -61,39 +53,34 @@ function handleSignup() {
   const error = document.getElementById("signupError");
   error.innerText = "";
 
-  if (!firstName || !lastName || !username || !password || !email ||!phoneNumber) {
+  if (!firstName || !lastName || !username || !password || !email || !phoneNumber) {
     error.innerText = "All fields are required";
     return;
   }
 
-  // More should go here that actually creates the account in the DB.
-  accountCreated = true; // This is used upon redirect to login.html
+  accountCreated = true;
   goToLogin();
-  // This line below need to be replaced or removed, as well as its references.
-  // handleReturnFromSignup() fulfills it's job in a less intrusive manner.
-  
-
 }
 
 // --- CONTACTS ---
-let contacts = [];
+let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
 let editIndex = null;
+let deleteIndex = null;
 
+function saveContacts() {
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+}
 
-
-function openAddForm()
-{
+function openAddForm() {
   document.getElementById("addContactForm").classList.remove("hidden");
 }
 
-function closeAddForm()
-{
+function closeAddForm() {
   document.getElementById("addContactForm").classList.add("hidden");
   clearAddForm();
 }
 
-function clearAddForm()
-{
+function clearAddForm() {
   document.getElementById("addFirstName").value = "";
   document.getElementById("addLastName").value = "";
   document.getElementById("addEmail").value = "";
@@ -115,50 +102,64 @@ function submitAddContact() {
   }
 
   contacts.push({ firstName: f, lastName: l, email: e, phone: p, date: new Date().toLocaleDateString() });
+  saveContacts(); 
   closeAddForm();
   clearAddForm();
-  // in here I suggest we wait for a message from the back end to see if contacts were added successfully in order to output a message
   renderContacts();
 }
 
 
-
-// --- RENDER CONTACT LIST ---
-function renderContacts() {
-  const list = document.getElementById("contactList");
+function renderContacts(list = contacts) {
+  const container = document.getElementById("contactList");
   const empty = document.getElementById("emptyMessage");
-  list.innerHTML = "";
-  if (contacts.length === 0) {
+
+  container.innerHTML = "";
+
+  if (list.length === 0) {
     empty.style.display = "block";
     return;
   }
+
   empty.style.display = "none";
-  contacts.forEach((c, index) => {
+
+  list.forEach((c, index) => {
     const div = document.createElement("div");
     div.className = "contact-item";
-    div.innerText = `${c.firstName} ${c.lastName} - ${c.phone} - ${c.email}`;
-    div.onclick = () => openEditForm(index);  // Changed from openEditModal
-    list.appendChild(div);
+
+    const span = document.createElement("span");
+    span.innerText = `${c.firstName} ${c.lastName} - ${c.email}`;
+    span.onclick = () => openEditForm(index); 
+
+    const delBtn = document.createElement("button");
+    delBtn.innerText = "Delete";
+    delBtn.onclick = (e) => {
+      e.stopPropagation();
+      openDeleteModal(index); 
+    };
+
+    div.appendChild(span);
+    div.appendChild(delBtn);
+    container.appendChild(div);
   });
 }
 
-// --- EDIT CONTACT ---
-function openEditForm(index) {  // Renamed from openEditModal
+
+function openEditForm(index) {
   editIndex = index;
   const c = contacts[index];
   document.getElementById("editFirstName").value = c.firstName;
   document.getElementById("editLastName").value = c.lastName;
   document.getElementById("editEmail").value = c.email;
   document.getElementById("editPhone").value = c.phone;
-  document.getElementById("editContactForm").classList.remove("hidden");  
+  document.getElementById("editContactForm").classList.remove("hidden");
 }
 
-function closeEditForm() {  // Renamed from closeEditModal
-  document.getElementById("editContactForm").classList.add("hidden"); 
-  clearEditForm();  
+function closeEditForm() {
+  document.getElementById("editContactForm").classList.add("hidden");
+  clearEditForm();
 }
 
-function clearEditForm() {  // Optional helper function
+function clearEditForm() {
   document.getElementById("editFirstName").value = "";
   document.getElementById("editLastName").value = "";
   document.getElementById("editEmail").value = "";
@@ -180,12 +181,11 @@ function submitEditContact() {
   }
 
   contacts[editIndex] = { ...contacts[editIndex], firstName: f, lastName: l, email: e, phone: p };
-  closeEditForm();  // Changed from closeEditModal
+  saveContacts(); 
+  closeEditForm();
   renderContacts();
 }
 
-// --- DELETE CONTACT ---
-let deleteIndex = null;
 function openDeleteModal(index) {
   deleteIndex = index;
   document.getElementById("deleteConfirmModal").classList.remove("hidden");
@@ -197,32 +197,36 @@ function closeDeleteModal() {
 
 function confirmDelete() {
   contacts.splice(deleteIndex, 1);
+  saveContacts(); 
   closeDeleteModal();
   renderContacts();
 }
 
-// --- SEARCH ---
+
 function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
-  const list = document.getElementById("contactList");
-  list.innerHTML = "";
-  contacts.forEach((c, index) => {
-    const fullName = `${c.firstName} ${c.lastName}`.toLowerCase();
-    if (fullName.includes(query) || c.email.toLowerCase().includes(query)) {
-      const div = document.createElement("div");
-      div.className = "contact-item";
-      div.innerText = `${c.firstName} ${c.lastName} - ${c.email}`;
-      div.onclick = () => openEditModal(index);
-      list.appendChild(div);
-    }
-  });
+  const container = document.getElementById("contactList");
+
+  if (query === "") {
+    renderContacts();
+    return;
+  }
+
+  const matches = contacts.filter(c =>
+    `${c.firstName} ${c.lastName}`.toLowerCase().includes(query)
+  );
+
+  if (matches.length === 0) {
+    container.innerHTML = `<p class="error">No contacts match your search.</p>`;
+    return;
+  }
+
+  renderContacts(matches);
 }
 
-// --- SIGN OUT ---
 function signOut() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
 }
 
-// Render initially
 document.addEventListener("DOMContentLoaded", renderContacts);
