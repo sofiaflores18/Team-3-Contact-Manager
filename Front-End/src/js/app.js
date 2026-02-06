@@ -109,39 +109,6 @@ function submitAddContact() {
 }
 
 
-function renderContacts(list = contacts) {
-  const container = document.getElementById("contactList");
-  const empty = document.getElementById("emptyMessage");
-
-  container.innerHTML = "";
-
-  if (list.length === 0) {
-    empty.style.display = "block";
-    return;
-  }
-
-  empty.style.display = "none";
-
-  list.forEach((c, index) => {
-    const div = document.createElement("div");
-    div.className = "contact-item";
-
-    const span = document.createElement("span");
-    span.innerText = `${c.firstName} ${c.lastName} - ${c.email}`;
-    span.onclick = () => openEditForm(index); 
-
-    const delBtn = document.createElement("button");
-    delBtn.innerText = "Delete";
-    delBtn.onclick = (e) => {
-      e.stopPropagation();
-      openDeleteModal(index); 
-    };
-
-    div.appendChild(span);
-    div.appendChild(delBtn);
-    container.appendChild(div);
-  });
-}
 
 
 function openEditForm(index) {
@@ -165,6 +132,40 @@ function clearEditForm() {
   document.getElementById("editEmail").value = "";
   document.getElementById("editPhone").value = "";
   document.getElementById("editError").innerText = "";
+}
+
+function renderContacts(list = contacts) {
+  const container = document.getElementById("contactList");
+  const empty = document.getElementById("emptyMessage");
+
+  container.innerHTML = "";
+
+  if (list.length === 0) {
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  list.forEach((c, index) => {
+    const div = document.createElement("div");
+    div.className = "contact-item";
+
+    const span = document.createElement("span");
+    span.innerText = `${c.firstName} ${c.lastName} - ${c.phone} -${c.email}`;
+    span.onclick = () => openEditForm(index); 
+
+    const delBtn = document.createElement("button");
+    delBtn.innerText = "Delete";
+    delBtn.onclick = (e) => {
+      e.stopPropagation();
+      openDeleteModal(index); 
+    };
+
+    div.appendChild(span);
+    div.appendChild(delBtn);
+    container.appendChild(div);
+  });
 }
 
 function submitEditContact() {
