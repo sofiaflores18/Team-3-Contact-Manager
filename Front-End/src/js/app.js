@@ -1,27 +1,98 @@
-// ================== DATA ==================
+// --- LOGIN & SIGNUP ---
+let accountCreated = false;
+
+function goToSignup() {
+  window.location.href = "signup.html";
+}
+
+function goToLogin() {
+  sessionStorage.setItem("accountCreated", accountCreated.toString());
+  window.location.href = "login.html";
+}
+
+function handleReturnFromSignup() {
+  const accNotif = document.getElementById("accountCreatedNotif");
+  accountCreated = sessionStorage.getItem("accountCreated") === "true";
+
+  if (accountCreated) {
+    accNotif.textContent = "You successfully created an account. Proceed to Log in.";
+    accNotif.style.display = 'block';
+  }
+  sessionStorage.removeItem("accountCreated");
+}
+
+function handleLogin() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  document.getElementById("loginEmailError").innerText = "";
+  document.getElementById("loginPasswordError").innerText = "";
+  document.getElementById("loginServerError").innerText = "";
+
+  if (!email || !password) {
+    if (!email) document.getElementById("loginEmailError").innerText = "Email required";
+    if (!password) document.getElementById("loginPasswordError").innerText = "Password required";
+    return;
+  }
+
+  if (email && password) {
+    localStorage.setItem("user", JSON.stringify({ email }));
+    window.location.href = "contact.html";
+  } else {
+    document.getElementById("loginServerError").innerText = "Invalid login";
+  }
+}
+
+function handleSignup() {
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const username = document.getElementById("signupUsername").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const phoneNumber = document.getElementById("signupNumber").value.trim();
+  const password = document.getElementById("signupPassword").value.trim();
+  const error = document.getElementById("signupError");
+  error.innerText = "";
+
+  if (!firstName || !lastName || !username || !password || !email || !phoneNumber) {
+    error.innerText = "All fields are required";
+    return;
+  }
+
+  accountCreated = true;
+  goToLogin();
+}
+
+// --- CONTACTS ---
 let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
 let editIndex = null;
 let deleteIndex = null;
 
-// ================== HELPERS ==================
 function saveContacts() {
   localStorage.setItem("contacts", JSON.stringify(contacts));
 }
 
-// ================== ADD CONTACT ==================
-function openAddModal() {
-  document.getElementById("addContactModal").classList.remove("hidden");
+function openAddForm() {
+  document.getElementById("addContactForm").classList.remove("hidden");
 }
 
-function closeAddModal() {
-  document.getElementById("addContactModal").classList.add("hidden");
+function closeAddForm() {
+  document.getElementById("addContactForm").classList.add("hidden");
+  clearAddForm();
+}
+
+function clearAddForm() {
+  document.getElementById("addFirstName").value = "";
+  document.getElementById("addLastName").value = "";
+  document.getElementById("addEmail").value = "";
+  document.getElementById("addPhone").value = "";
+  document.getElementById("addError").innerText = "";
 }
 
 function submitAddContact() {
-  const f = addFirstName.value.trim();
-  const l = addLastName.value.trim();
-  const e = addEmail.value.trim();
-  const p = addPhone.value.trim();
+  const f = document.getElementById("addFirstName").value.trim();
+  const l = document.getElementById("addLastName").value.trim();
+  const e = document.getElementById("addEmail").value.trim();
+  const p = document.getElementById("addPhone").value.trim();
   const error = document.getElementById("addError");
   error.innerText = "";
 
@@ -30,18 +101,14 @@ function submitAddContact() {
     return;
   }
 
-  contacts.push({ firstName: f, lastName: l, email: e, phone: p });
-  saveContacts();
-  closeAddModal();
-  document.getElementById("contactAddedModal").classList.remove("hidden");
+  contacts.push({ firstName: f, lastName: l, email: e, phone: p, date: new Date().toLocaleDateString() });
+  saveContacts(); 
+  closeAddForm();
+  clearAddForm();
   renderContacts();
 }
 
-function closeContactAddedModal() {
-  document.getElementById("contactAddedModal").classList.add("hidden");
-}
 
-// ================== RENDER ==================
 function renderContacts(list = contacts) {
   const container = document.getElementById("contactList");
   const empty = document.getElementById("emptyMessage");
@@ -58,17 +125,16 @@ function renderContacts(list = contacts) {
   list.forEach((c, index) => {
     const div = document.createElement("div");
     div.className = "contact-item";
-    div.className = "contact-item";
 
     const span = document.createElement("span");
     span.innerText = `${c.firstName} ${c.lastName} - ${c.email}`;
-    span.onclick = () => openEditModal(index);
+    span.onclick = () => openEditForm(index); 
 
     const delBtn = document.createElement("button");
     delBtn.innerText = "Delete";
     delBtn.onclick = (e) => {
-      e.stopPropagation(); // prevents edit from opening
-      openDeleteModal(index);
+      e.stopPropagation();
+      openDeleteModal(index); 
     };
 
     div.appendChild(span);
@@ -77,28 +143,35 @@ function renderContacts(list = contacts) {
   });
 }
 
-// ================== EDIT ==================
-function openEditModal(index) {
+
+function openEditForm(index) {
   editIndex = index;
   const c = contacts[index];
-
-  editFirstName.value = c.firstName;
-  editLastName.value = c.lastName;
-  editEmail.value = c.email;
-  editPhone.value = c.phone;
-
-  document.getElementById("editContactModal").classList.remove("hidden");
+  document.getElementById("editFirstName").value = c.firstName;
+  document.getElementById("editLastName").value = c.lastName;
+  document.getElementById("editEmail").value = c.email;
+  document.getElementById("editPhone").value = c.phone;
+  document.getElementById("editContactForm").classList.remove("hidden");
 }
 
-function closeEditModal() {
-  document.getElementById("editContactModal").classList.add("hidden");
+function closeEditForm() {
+  document.getElementById("editContactForm").classList.add("hidden");
+  clearEditForm();
+}
+
+function clearEditForm() {
+  document.getElementById("editFirstName").value = "";
+  document.getElementById("editLastName").value = "";
+  document.getElementById("editEmail").value = "";
+  document.getElementById("editPhone").value = "";
+  document.getElementById("editError").innerText = "";
 }
 
 function submitEditContact() {
-  const f = editFirstName.value.trim();
-  const l = editLastName.value.trim();
-  const e = editEmail.value.trim();
-  const p = editPhone.value.trim();
+  const f = document.getElementById("editFirstName").value.trim();
+  const l = document.getElementById("editLastName").value.trim();
+  const e = document.getElementById("editEmail").value.trim();
+  const p = document.getElementById("editPhone").value.trim();
   const error = document.getElementById("editError");
   error.innerText = "";
 
@@ -107,34 +180,31 @@ function submitEditContact() {
     return;
   }
 
-  contacts[editIndex] = { firstName: f, lastName: l, email: e, phone: p };
-  saveContacts();
-  closeEditModal();
+  contacts[editIndex] = { ...contacts[editIndex], firstName: f, lastName: l, email: e, phone: p };
+  saveContacts(); 
+  closeEditForm();
   renderContacts();
 }
 
-// ================== DELETE ==================
-function openDeleteModal() {
-  deleteIndex = editIndex;
+function openDeleteModal(index) {
+  deleteIndex = index;
   document.getElementById("deleteConfirmModal").classList.remove("hidden");
 }
 
 function closeDeleteModal() {
-  deleteIndex = null;
   document.getElementById("deleteConfirmModal").classList.add("hidden");
 }
 
 function confirmDelete() {
   contacts.splice(deleteIndex, 1);
-  saveContacts();
+  saveContacts(); 
   closeDeleteModal();
-  closeEditModal();
   renderContacts();
 }
 
-// ================== SEARCH ==================
+
 function searchContacts() {
-  const query = searchInput.value.toLowerCase();
+  const query = document.getElementById("searchInput").value.toLowerCase();
   const container = document.getElementById("contactList");
 
   if (query === "") {
@@ -154,11 +224,9 @@ function searchContacts() {
   renderContacts(matches);
 }
 
-// ================== AUTH ==================
 function signOut() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
 }
 
-// ================== INIT ==================
 document.addEventListener("DOMContentLoaded", renderContacts);
