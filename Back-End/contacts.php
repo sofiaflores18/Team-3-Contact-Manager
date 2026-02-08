@@ -89,7 +89,7 @@ switch ($action)
       ");
 
         $row = $result->fetch_assoc();
-        echo $row;
+        echo $row['contacts'];
         break;
 
     default:
