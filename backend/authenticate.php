@@ -31,7 +31,13 @@ switch ($action)
         break;
     
     case 'login':
-        //login logic
+        $username = $_POST['username'];
+        $password_user = $_POST['password']
+        // hash password here
+        $hashed_password = $password_user
+        $conn->query("
+        SELECT * FROM users WHERE username='{$username}' AND password='{$hashed_password}'
+        ");
         break;
     
     default:
