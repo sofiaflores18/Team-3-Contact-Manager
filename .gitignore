@@ -3,3 +3,4 @@
 # Type it like !filename to exclude it from being ignored
 # You cannot negate a file inside a directory: !directory/file.txt does not work
 .idea/
+/Front-End/src/pages/test.html
