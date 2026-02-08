@@ -5,6 +5,8 @@ error_reporting(E_ALL);
 
 session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
+
+//Imports
 require "db.php";
 require "auxiliary.php";
 
@@ -24,14 +26,28 @@ switch ($action)
         $password_user = $info['password'];
         $created = date('Y-m-d H:i:s');
 
-        $conn->query("
-        INSERT INTO users (firstname, lastname, username, email, phone, password_user, created)
-        VALUES ('$firstname', '$lastname', '$username', '$email', '$phone', '$password_user', '$created')
-        ");
+        $stmt = $conn->prepare(
+        "INSERT INTO users 
+        (firstname, lastname, username, email, phone, password_user, created)
+        VALUES (?, ?, ?, ?, ?, ?, ?)"
+        );
 
+        $stmt->bind_param(
+        "sssssss",
+        $firstname,
+        $lastname,
+        $username,
+        $email,
+        $phone,
+        $password_user,
+        $created
+        );
+
+        $stmt->execute();
 
         //Store the user_id from the id generated when inserting this user into mysql
         $user_id = $conn->insert_id;
+
         $_SESSION['user_id'] = $user_id;
 
         echo json_encode(["status" => "success", "user_id" => $user_id]);
