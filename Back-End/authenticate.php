@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
 require "db.php";
-require "auxiliary.php"
+require "auxiliary.php";
 
 $info = getRequestInfo();
 
