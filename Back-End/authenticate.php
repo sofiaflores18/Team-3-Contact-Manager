@@ -6,19 +6,22 @@ error_reporting(E_ALL);
 session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
 require "db.php";
+require "auxiliary.php"
 
-$action = $_POST['action'] ?? '';
+$info = getRequestInfo();
+
+$action = $info['action'] ?? '';
 
 switch ($action)
 {
     case 'signup':
         //signup logic
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $username =  $_POST['username'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
-        $password_user = $_POST['password'];
+        $firstname = $info['firstname'];
+        $lastname = $info['lastname'];
+        $username =  $info['username'];
+        $email = $info['email'];
+        $phone = $info['phone'];
+        $password_user = $info['password'];
         $created = date('Y-m-d H:i:s');
 
         $conn->query("

@@ -9,9 +9,6 @@ if (!isset($_SESSION['user_id'])) {
         exit;
     }
 
-function getRequestInfo(){
-    return json_decode(file_get_contents("php://input"), true);
-}   
 
 $info = getRequestInfo();
 $action = $info['action'] ?? '';
