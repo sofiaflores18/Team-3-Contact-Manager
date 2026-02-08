@@ -1,8 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 $host = "localhost";
-$user = "root";
-$password = "";
+$user = "contact_user";
+$password = "contact_pass";
 $db = "contactManager";
 
 $conn = new mysqli($host, $user, $password, $db);
