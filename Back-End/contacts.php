@@ -37,12 +37,12 @@ switch ($action)
 
     case ("read"):
         //read contact logic
-        $user_id = $info['user_id']
+        $user_id = $info['user_id'];
 
-        $limit = 20
-        $offset = 0
+        $limit = 20;
+        $offset = 0;
 
-        $aresult = $conn->query("
+        $result = $conn->query("
         SELECT JSON_ARRAYAGG(
             JSON_OBJECT(
                 'id', id,
@@ -61,7 +61,7 @@ switch ($action)
 
         $row = $result->fetch_assoc();
         echo $row['contacts'];
-        return $row['contacts']
+        return $row['contacts'];
         break;
 
     case ("update"):
