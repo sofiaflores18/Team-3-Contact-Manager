@@ -4,12 +4,8 @@ header("Content-Type: application/json");
 require "db.php";
 require "auxiliary.php";
 
-if (!isset($_SESSION['user_id'])) {
-        echo json_encode(["status" => "failed", "error" => "Not authenticated"]);
-        exit;
-    }
 
-
+//Get information from the POST request
 $info = getRequestInfo();
 $action = $info['action'] ?? '';
 
@@ -21,7 +17,7 @@ switch ($action)
         $lastname = $info['lastname'];
         $email = $info['email'];
         $phone = $info['phone'];
-        $user_id = $_SESSION['user_id']; //$_SESSION is another super global array that stores information saved on the client (browser)
+        $user_id = $info['user_id'];
         $created = date('Y-m-d H:i:s');
 
         $conn->query("
@@ -34,7 +30,12 @@ switch ($action)
 
     case ("read"):
         //read contact logic
-        $all_contacts = $conn->query("
+        $user_id = $info['user_id'];
+
+        $limit = 20;
+        $offset = 0;
+
+        $result = $conn->query("
         SELECT JSON_ARRAYAGG(
             JSON_OBJECT(
                 'id', id,
@@ -46,11 +47,14 @@ switch ($action)
                 'created', created
             )
         ) AS contacts
-        FROM contacts;
+        FROM contacts
+        WHERE user_id = $user_id
+        LIMIT $limit OFFSET $offset;
         ");
 
-        echo $all_contacts;
-        return $all_contacts;
+        $row = $result->fetch_assoc();
+        echo $row['contacts'] ?? '[]';
+        break;
 
     case ("update"):
         //update contact logic
@@ -62,6 +66,30 @@ switch ($action)
     
     case ("search"):
         //search contact logic
+
+        //firstname search logic only
+        $user_id = $info['user_id'];
+        $firstname = $info['firstname'];
+
+        $result = $conn->query("
+            SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'id', id,
+                'firstname', firstname,
+                'lastname', lastname,
+                'email', email,
+                'phone', phone,
+                'user_id', user_id,
+                'created', created
+            )
+        ) AS contacts
+        FROM contacts
+        WHERE user_id = $user_id
+        AND firstname LIKE '%$firstname%';
+      ");
+
+        $row = $result->fetch_assoc();
+        echo $row['contacts'];
         break;
 
     default:
