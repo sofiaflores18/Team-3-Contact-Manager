@@ -4,14 +4,17 @@ header("Content-Type: application/json");
 require "db.php";
 require "auxiliary.php";
 
-if (!isset($_SESSION['user_id'])) {
-        echo json_encode(["status" => "failed", "error" => "Not authenticated"]);
-        exit;
-    }
 
-
+//Get information from the POST request
 $info = getRequestInfo();
 $action = $info['action'] ?? '';
+
+if (isset($info['user_id'])) {
+    echo json_encode(["authenticated" => true, "user_id" => $info['user_id']]);
+} else {
+    echo json_encode(["authenticated" => false]);
+}
+
 
 switch ($action)
 {
@@ -21,7 +24,7 @@ switch ($action)
         $lastname = $info['lastname'];
         $email = $info['email'];
         $phone = $info['phone'];
-        $user_id = $_SESSION['user_id']; //$_SESSION is another super global array that stores information saved on the client (browser)
+        $user_id = $info['user_id'];
         $created = date('Y-m-d H:i:s');
 
         $conn->query("
