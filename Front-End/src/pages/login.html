@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,3 +29,39 @@
 <script src="../js/app.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/modals.css">
+</head>
+<body>
+
+<div class="card">
+  <h1>Contact Manager</h1>
+
+  <label>Email</label>
+  <input type="text" id="loginEmail">
+  <p class="error" id="loginEmailError"></p>
+
+  <label>Password</label>
+  <input type="password" id="loginPassword">
+  <p class="error" id="loginPasswordError"></p>
+
+  <p class="error" id="loginServerError"></p>
+
+  <button onclick="handleLogin()">Log In</button>
+  <button class="secondary" onclick="goToSignup()">Sign Up</button>
+
+  <p class="notif" id="accountCreatedNotif"></p>
+</div>
+
+<script src="../js/app.js"></script>
+<script>handleReturnFromSignup();</script>
+
+</body>
+</html>
+>>>>>>> c923ccc33ddc9979fdffadfdccd5cf2630117da4
