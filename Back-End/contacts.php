@@ -9,13 +9,6 @@ require "auxiliary.php";
 $info = getRequestInfo();
 $action = $info['action'] ?? '';
 
-if (isset($info['user_id'])) {
-    echo json_encode(["authenticated" => true, "user_id" => $info['user_id']]);
-} else {
-    echo json_encode(["authenticated" => false]);
-}
-
-
 switch ($action)
 {
     case ("create"):
@@ -60,8 +53,7 @@ switch ($action)
         ");
 
         $row = $result->fetch_assoc();
-        echo $row['contacts'];
-        return $row['contacts'];
+        echo $row['contacts'] ?? '[]';
         break;
 
     case ("update"):
@@ -74,6 +66,30 @@ switch ($action)
     
     case ("search"):
         //search contact logic
+
+        //firstname search logic only
+        $user_id = $info['user_id'];
+        $firstname = $info['firstname'];
+
+        $result = $conn->query("
+            SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+                'id', id,
+                'firstname', firstname,
+                'lastname', lastname,
+                'email', email,
+                'phone', phone,
+                'user_id', user_id,
+                'created', created
+            )
+        ) AS contacts
+        FROM contacts
+        WHERE user_id = $user_id
+        AND firstname LIKE '%$firstname%';
+      ");
+
+        $row = $result->fetch_assoc();
+        echo $row;
         break;
 
     default:
