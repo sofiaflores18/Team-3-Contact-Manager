@@ -8,3 +8,15 @@ curl -X POST http://localhost/backend/authenticate.php \
     "phone": "999-999-9999",
     "password": "ded1234"
   }'
+
+
+  curl -X POST http://localhost/backend/authenticate.php \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": "login",
+    "firstname": "David",
+    "username": "deduardo",
+    "email": "ded@gmail.com",
+    "phone": "999-999-9999",
+    "password": "ded1234"
+  }'
