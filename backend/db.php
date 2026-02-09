@@ -5,8 +5,8 @@ error_reporting(E_ALL);
 
 
 $host = "localhost";
-$user = "contact_user";
-$password = "contact_pass";
+$user = "root";
+$password = "team3";
 $db = "contactManager";
 
 $conn = new mysqli($host, $user, $password, $db);
