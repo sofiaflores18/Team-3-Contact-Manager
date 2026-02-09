@@ -58,7 +58,53 @@ switch ($action)
 
     case ("update"):
         //update contact logic
+
+        $id= $info['id'] ?? null;
+        $user_id = $info['user_id'] ?? null;
+
+        if (!$id || !$user_id) {
+            echo json_encode(["status"=>"failed", "error"=>"We don't have that user"]);
+            break;
+        }
+
+        // Use NULL so COALESCE keeps old values
+        $firstname = $info['firstname'] ?? null;
+        $lastname  = $info['lastname'] ?? null;
+        $email     = $info['email'] ?? null;
+        $phone     = $info['phone'] ?? null;
+
+        $query = $conn->prepare("
+            UPDATE contacts
+            SET firstname = COALESCE(?, firstname),
+                lastname  = COALESCE(?, lastname),
+                email     = COALESCE(?, email),
+                phone     = COALESCE(?, phone)
+            WHERE id = ? AND user_id = ?
+        ");
+
+        if (!$query) {
+            echo json_encode(["status"=>"failed", "error"=>"Prepare failed", "details"=>$conn->error]);
+            break;
+        }
+
+        $query->bind_param("ssssii", $firstname, $lastname, $email, $phone, $id, $user_id);
+
+        if (!$query->execute()) {
+            echo json_encode(["status"=>"failed", "error"=>"failed", "details"=>$query->error]);
+            $query->close();
+            break;
+        }
+
+        if ($query->affected_rows === 0) {
+            echo json_encode(["status"=>"failed", "error"=>"no changes"]);
+            $query->close();
+            break;
+        }
+
+        echo json_encode(["status"=>"success"]);
+        $query->close();
         break;
+
 
     case ("delete"):
         //delete contact logic
