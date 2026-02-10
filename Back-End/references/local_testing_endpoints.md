@@ -29,3 +29,19 @@ curl.exe -X POST "http://localhost/Team-3-Contact-Manager/Back-End/contacts.php"
 
 ```
 
+```bash
+curl -X POST "http://localhost/Team-3-Contact-Manager/Back-End/authenticate.php" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": "signup",
+    "firstname": "Test",
+    "lastname": "User",
+    "username": "testuser123",
+    "email": "testuser1@example.com",
+    "phone": "555-1234",
+    "password": "secret"
+  }'
+
+
+```
+

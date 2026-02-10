@@ -57,7 +57,7 @@ switch ($action)
         $user_id = $conn->insert_id;
 
         $_SESSION['user_id'] = $user_id;
-
+        $stmt->close();
         
         echo json_encode(["status" => "success", "user_id" => $user_id]);
         break;

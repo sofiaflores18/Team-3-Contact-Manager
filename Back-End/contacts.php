@@ -54,6 +54,7 @@ switch ($action)
 
         $row = $result->fetch_assoc();
         echo $row['contacts'] ?? '[]';
+
         break;
 
     case ("update"):
@@ -69,6 +70,7 @@ switch ($action)
 
         else if (!$id){
             echo json_encode(["status"=>"failed", "error"=>"Contact does not exist."]);
+            break;
         }
 
         // Use NULL so COALESCE keeps old values
@@ -115,13 +117,20 @@ switch ($action)
         $user_id = $info['user_id'];
         $contact_id = $info['contact_id'];
 
-        $query = $conn->prepare("
+        $stmt = $conn->prepare("
         DELETE FROM contacts
         WHERE id = ? AND user_id = ?;
-        ")
+        ");
 
         $stmt->bind_param("ii", $contact_id, $user_id);
         $stmt->execute();
+
+        if ($query->affected_rows === 0) {
+            echo json_encode(["status" => "failed", "error" => "not found"]);
+        } else {
+            echo json_encode(["status" => "success"]);
+        }
+        $query->close();
 
         break;
     
