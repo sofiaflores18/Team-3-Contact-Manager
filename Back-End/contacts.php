@@ -59,12 +59,16 @@ switch ($action)
     case ("update"):
         //update contact logic
 
-        $id= $info['id'] ?? null;
-        $user_id = $info['user_id'] ?? null;
-
-        if (!$id || !$user_id) {
-            echo json_encode(["status"=>"failed", "error"=>"We don't have that user"]);
+        $user_id = $info['user_id'] ?? null; //User id
+        $id= $info['contact_id'] ?? null; //Contact id
+        
+        if (!$user_id) {
+            echo json_encode(["status"=>"failed", "error"=>"User does not exist."]);
             break;
+        }
+
+        else if (!$id){
+            echo json_encode(["status"=>"failed", "error"=>"Contact does not exist."]);
         }
 
         // Use NULL so COALESCE keeps old values
@@ -108,6 +112,17 @@ switch ($action)
 
     case ("delete"):
         //delete contact logic
+        $user_id = $info['user_id'];
+        $contact_id = $info['contact_id'];
+
+        $query = $conn->prepare("
+        DELETE FROM contacts
+        WHERE id = ? AND user_id = ?;
+        ")
+
+        $stmt->bind_param("ii", $contact_id, $user_id);
+        $stmt->execute();
+
         break;
     
     case ("search"):
