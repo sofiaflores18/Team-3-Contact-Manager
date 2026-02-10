@@ -125,12 +125,12 @@ switch ($action)
         $stmt->bind_param("ii", $contact_id, $user_id);
         $stmt->execute();
 
-        if ($query->affected_rows === 0) {
+        if ($stmt->affected_rows === 0) {
             echo json_encode(["status" => "failed", "error" => "not found"]);
         } else {
             echo json_encode(["status" => "success"]);
         }
-        $query->close();
+        $stmt->close();
 
         break;
     
