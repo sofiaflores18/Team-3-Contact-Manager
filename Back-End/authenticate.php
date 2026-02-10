@@ -43,17 +43,22 @@ switch ($action)
         $created
         );
 
-        $stmt->execute();
+        if (!$stmt->execute()){
+            if ($stmt->errno === 1062) { //1062 is the error code for duplicate entry
+                echo json_encode(["status" => "Error 409 Conflict", "message" => "username already exists, error: " . $stmt->errno]);
+            }
+            else{
+                echo "Error ({$stmt->errno}): " . $stmt->error;
+            }
+
+        }
 
         //Store the user_id from the id generated when inserting this user into mysql
         $user_id = $conn->insert_id;
 
         $_SESSION['user_id'] = $user_id;
 
-        if ($stmt->errno === 1062) { //1062 is the error code for duplicate entry
-            echo json_encode(["status" => "Error 409 Conflict", "message" => "username already exists, error: " . $stmt->errno]);
-        }
-
+        
         echo json_encode(["status" => "success", "user_id" => $user_id]);
         break;
     
