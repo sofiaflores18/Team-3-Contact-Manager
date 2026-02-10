@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 $host = "localhost";
 $user = "root";
-$password = "team3";
+$password = "";
 $db = "contactManager";
 
 $conn = new mysqli($host, $user, $password, $db);
@@ -18,7 +18,7 @@ if ($conn->connect_error)
 
 else
 {
-    echo "Connection to database succeeded!\n";
+   //echo "Connection to database succeeded!\n";
 }
 
 ?>

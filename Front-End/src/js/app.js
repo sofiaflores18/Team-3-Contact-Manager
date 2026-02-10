@@ -42,8 +42,8 @@ function handleLogin() {
     document.getElementById("loginServerError").innerText = "Invalid login";
   }
 }
-
-function handleSignup() {
+//changed to async function to use API
+async function handleSignup() {
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
   const username = document.getElementById("signupUsername").value.trim();
@@ -58,10 +58,24 @@ function handleSignup() {
     return;
   }
 
-  accountCreated = true;
-  goToLogin();
-}
+    // Call API
+    const result = await signupAPI({
+        firstname: firstName,
+        lastname: lastName,
+        username: username,
+        email: email,
+        phone: phoneNumber,
+        password: password
+    });
 
+    if (result.status === 'success') {
+        accountCreated = true;
+        goToLogin();
+    } else {
+        error.innerText = result.error || "Signup failed";
+    }
+}
+ 
 // --- CONTACTS ---
 let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
 let editIndex = null;
