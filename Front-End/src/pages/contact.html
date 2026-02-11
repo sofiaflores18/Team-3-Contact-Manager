@@ -9,48 +9,31 @@
 <body>
 
 <div class="card">
-  <h2>Contacts</h2>
+  <h1 style="text-align: center;">Contacts</h1>
 
   <div class="top-buttons">
-    <button onclick="openAddForm()">Add Contact</button>
     <button onclick="signOut()">Sign Out</button>
-    <input type="text" id="searchInput" placeholder="Search..." onkeyup="searchContacts()">
+    <button onclick="openAddForm()">Add Contact</button>
+    <button onclick="searchContacts()">Search</button>
+    <input type="text" id="searchInput" placeholder="Criteria...">
   </div>
 
+  <div id="addContactForm" class="form-container hidden">
+    <h2 style="text-align: center;">Add Contact</h2>
+    <label>First Name</label>
+    <input type="text" class="text-box" id="addFirstName">
+    <label>Last Name</label>
+    <input type="text" class="text-box" id="addLastName">
+    <label>Email</label>
+    <input type="text" class="text-box" id="addEmail">
+    <label>Phone</label>
+    <input type="text" class="text-box" id="addPhone">
+    <p class="error" id="addError"></p> <!-- IDK what this does -->
+    <button onclick="submitAddContact()">Submit</button>
+    <button onclick="closeAddForm()">Cancel</button>
+  </div>
   <div id="contactList"></div>
-  <div id="emptyMessage">Please add a contact</div>
-</div>
-
-
-<div id="addContactForm" class="form-container hidden">
-  <h2>Add Contact</h2>
-  <label>First Name</label>
-  <input type="text" id="addFirstName">
-  <label>Last Name</label>
-  <input type="text" id="addLastName">
-  <label>Email</label>
-  <input type="text" id="addEmail">
-  <label>Phone</label>
-  <input type="text" id="addPhone">
-  <p class="error" id="addError"></p>
-  <button onclick="submitAddContact()">Submit</button>
-  <button onclick="closeAddForm()">Cancel</button>
-</div>
-
-<!-- Edit Contact Form (inline, like Add Contact) -->
-<div id="editContactForm" class="form-container hidden">
-  <h3>Edit Contact</h3>
-  <label>First Name</label>
-  <input type="text" id="editFirstName">
-  <label>Last Name</label>
-  <input type="text" id="editLastName">
-  <label>Email</label>
-  <input type="text" id="editEmail">
-  <label>Phone</label>
-  <input type="text" id="editPhone">
-  <p class="error" id="editError"></p>
-  <button onclick="submitEditContact()">Save</button>
-  <button onclick="closeEditForm()">Cancel</button>
+  <div id="emptyMessage" style="text-align: center;">Add or Search for a Contact</div>
 </div>
 
 <!-- Delete Confirmation Modal -->
