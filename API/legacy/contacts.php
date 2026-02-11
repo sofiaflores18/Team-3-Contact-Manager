@@ -1,14 +1,6 @@
 <?php
-session_start(); //use this so we can access $_SESSION
-header("Content-Type: application/json");
-
-//IMPORTS
-require "scripts/auxiliary.php";
-require "scripts/db.php";
-
-
-//Get information from the POST request
-$info = getRequestInfo();
+//Imports
+require "../default_endpoint.php";
 $action = $info['action'] ?? '';
 
 switch ($action)
