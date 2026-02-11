@@ -14,6 +14,11 @@ function signup($info, $conn)
     $email = $info['email'] ?? null;
     $phone = $info['phone'] ?? null;
     $password_user = password_hash($info['password'], PASSWORD_DEFAULT);
+
+    //DEBUG
+    echo $password_user;
+    echo $info['password'];
+
     $created = date('Y-m-d H:i:s'); 
 
     $stmt = $conn->prepare(
