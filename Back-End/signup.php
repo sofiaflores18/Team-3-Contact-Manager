@@ -8,18 +8,19 @@ error_reporting(E_ALL);
 
 header("Content-Type: application/json");
 
+$info = getRequestInfo();
 $action = $info['action'] ?? '';
 
 //Signup function
-function signup()
+function signup($info, $conn)
 {
     //signup logic
-    $firstname = $info['firstname'];
-    $lastname = $info['lastname'];
-    $username =  $info['username'];
-    $email = $info['email'];
-    $phone = $info['phone'];
-    $password_user = $info['password'];
+    $firstname = $info['firstname'] ?? null;
+    $lastname = $info['lastname'] ?? null;
+    $username =  $info['username'] ?? null;
+    $email = $info['email'] ?? null;
+    $phone = $info['phone'] ?? null;
+    $password_user = password_hash($info['password'], PASSWORD_DEFAULT);
     $created = date('Y-m-d H:i:s'); 
 
     $stmt = $conn->prepare(
@@ -43,8 +44,12 @@ function signup()
     {
         if ($stmt->errno === 1062) 
         { //1062 is the error code for duplicate entry
-            echo json_encode(["status" => "Error 409 Conflict", "message" => "username already exists, error: " . $stmt->errno]);
-        }
+            http_response_code(409);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Username or email already exists"
+            ]);
+            }
 
         else
         {
@@ -57,7 +62,11 @@ function signup()
 
     $stmt->close();
 
-    echo json_encode(value: ["status" => "success", "message" => "Account creation successful!", "user_id" => $user_id]);
+    echo json_encode([
+        "status" => "success", 
+        "message" => "Account creation successful!", 
+        "user_id" => $user_id
+    ]);
 }
 
 
@@ -68,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST')
 }
 
 
-signup();
+signup($info, $conn);
 
 
 
