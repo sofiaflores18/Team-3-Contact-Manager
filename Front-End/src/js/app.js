@@ -138,8 +138,8 @@ function renderContactItem(contact, index) {
       <input type="text" class="text-box" value="${contact.phone}" id="editPhone${index}">
       <p class="error" id="editError${index}"></p>
       <button onclick="submitEditContact()">Save</button>
-      <button onclick="cancelEditContact()">Cancel</button>
-      <button onclick="openDeleteModal(${index})" style="color: darkred">Delete</button>
+      <button onclick="cancelEditContact()" class="secondary">Cancel</button>
+      <button onclick="openDeleteModal(${index})" style="color: darkred" class="secondary">Delete</button>
     `;
     div.appendChild(editForm);
   } else {
