@@ -6,10 +6,10 @@ function login($info, $conn)
     
     $username = $info['username']; // strip characters (whitespace, casing?)
     $password_user = $info['password'];
-    $hashed_password = password_hash($password_user, PASSWORD_DEFAULT); // TODO: hash password
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password_user=?"); 
-    $stmt->bind_param("ss", $username, $hashed_password);
+    //First, fetch by username ONLY. Once we retrieve the hashed password then we can verify if it's valid
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username=?"); 
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
     
@@ -18,9 +18,17 @@ function login($info, $conn)
 
     if($num_results == 1) 
     {
+        $row = $result->fetch_assoc();
+        if(!password_verify($password_user, $row['password_user']))
+        {
+            echo json_encode([
+                "status" => "failure", 
+                "message" => "Invalid password"
+                ]);
+            return;
+        }
         // matching user found
-        $user_id = $result->fetch_assoc()['id'];
-        $_SESSION['user_id'] = $user_id;
+        $user_id = $row['id'];
 
         echo json_encode(value: ["status" => "success", "message" => "Login successful!", "user_id" => $user_id]);
     } 
