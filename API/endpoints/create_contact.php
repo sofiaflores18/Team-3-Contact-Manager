@@ -30,8 +30,6 @@ function create_contact($info, $conn)
         $stmt->execute();
         echo json_encode(["status" => "success", "contact_id" => $conn->insert_id]);
         $stmt->close();
-
-        break;
 }
 
 //Main Function Logic
