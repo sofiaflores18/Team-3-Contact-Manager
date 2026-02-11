@@ -21,10 +21,10 @@ function login($info, $conn)
         $row = $result->fetch_assoc();
 
         //DEBUG
-        echo json_encode([
-            "debug_input" => $password_user,
-            "debug_stored" => $row['password_user']
-        ]);
+        // echo json_encode([
+        //     "debug_input" => $password_user,
+        //     "debug_stored" => $row['password_user']
+        // ]);
 
         if(!password_verify($password_user, $row['password_user']))
         {

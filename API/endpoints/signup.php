@@ -16,10 +16,10 @@ function signup($info, $conn)
     $password_user = password_hash($info['password'], PASSWORD_DEFAULT);
 
     //DEBUG
-    echo json_encode([
-        "debug_hashed" => $password_user,
-        "debug_input" => $info['password']
-    ]);
+    // echo json_encode([
+    //     "debug_hashed" => $password_user,
+    //     "debug_input" => $info['password']
+    // ]);
 
     $created = date('Y-m-d H:i:s'); 
 
