@@ -54,14 +54,84 @@ switch ($action)
 
         $row = $result->fetch_assoc();
         echo $row['contacts'] ?? '[]';
+
         break;
 
     case ("update"):
         //update contact logic
+
+        $user_id = $info['user_id'] ?? null; //User id
+        $id= $info['contact_id'] ?? null; //Contact id
+        
+        if (!$user_id) {
+            echo json_encode(["status"=>"failed", "error"=>"User does not exist."]);
+            break;
+        }
+
+        else if (!$id){
+            echo json_encode(["status"=>"failed", "error"=>"Contact does not exist."]);
+            break;
+        }
+
+        // Use NULL so COALESCE keeps old values
+        $firstname = $info['firstname'] ?? null;
+        $lastname  = $info['lastname'] ?? null;
+        $email     = $info['email'] ?? null;
+        $phone     = $info['phone'] ?? null;
+
+        $query = $conn->prepare("
+            UPDATE contacts
+            SET firstname = COALESCE(?, firstname),
+                lastname  = COALESCE(?, lastname),
+                email     = COALESCE(?, email),
+                phone     = COALESCE(?, phone)
+            WHERE id = ? AND user_id = ?
+        ");
+
+        if (!$query) {
+            echo json_encode(["status"=>"failed", "error"=>"Prepare failed", "details"=>$conn->error]);
+            break;
+        }
+
+        $query->bind_param("ssssii", $firstname, $lastname, $email, $phone, $id, $user_id);
+
+        if (!$query->execute()) {
+            echo json_encode(["status"=>"failed", "error"=>"failed", "details"=>$query->error]);
+            $query->close();
+            break;
+        }
+
+        if ($query->affected_rows === 0) {
+            echo json_encode(["status"=>"failed", "error"=>"no changes"]);
+            $query->close();
+            break;
+        }
+
+        echo json_encode(["status"=>"success"]);
+        $query->close();
         break;
+
 
     case ("delete"):
         //delete contact logic
+        $user_id = $info['user_id'];
+        $contact_id = $info['contact_id'];
+
+        $stmt = $conn->prepare("
+        DELETE FROM contacts
+        WHERE id = ? AND user_id = ?;
+        ");
+
+        $stmt->bind_param("ii", $contact_id, $user_id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows === 0) {
+            echo json_encode(["status" => "failed", "error" => "not found"]);
+        } else {
+            echo json_encode(["status" => "success"]);
+        }
+        $stmt->close();
+
         break;
     
     case ("search"):
