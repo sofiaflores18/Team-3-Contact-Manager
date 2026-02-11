@@ -25,7 +25,6 @@ function login($info, $conn)
             "debug_input" => $password_user,
             "debug_stored" => $row['password_user']
         ]);
-        exit;
 
         if(!password_verify($password_user, $row['password_user']))
         {

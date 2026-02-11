@@ -20,7 +20,6 @@ function signup($info, $conn)
         "debug_hashed" => $password_user,
         "debug_input" => $info['password']
     ]);
-    exit;
 
     $created = date('Y-m-d H:i:s'); 
 
