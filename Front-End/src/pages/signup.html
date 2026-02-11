@@ -7,32 +7,33 @@
   <link rel="stylesheet" href="../css/modals.css">
 </head>
 <body>
+<div class="parent-container">
+  <div class="card">
+    <h2 align="center">Sign Up</h2>
 
-<div class="card">
-  <h2>Sign Up</h2>
+    <label>First Name</label>
+    <input type="text" class="text-box" id="firstName">
 
-  <label>First Name</label>
-  <input type="text" class="text-box" id="firstName">
+    <label>Last Name</label>
+    <input type="text" class="text-box" id="lastName">
 
-  <label>Last Name</label>
-  <input type="text" class="text-box" id="lastName">
+    <label>Username</label>
+    <input type="text"  class="text-box" id="signupUsername">
 
-  <label>Username</label>
-  <input type="text" class="text-box" id="signupUsername">
+    <label>Email</label>
+    <input type="email" class="text-box" id="signupEmail">
 
-  <label>Email</label>
-  <input type="email" class="text-box" id="signupEmail">
+    <label>Phone Number</label>
+    <input type="tel" class="text-box" id="signupNumber">
 
-  <label>Phone Number</label>
-  <input type="tel" class="text-box" id="signupNumber">
+    <label>Password</label>
+    <input type="password" class="text-box" id="signupPassword">
 
-  <label>Password</label>
-  <input type="password" class="text-box" id="signupPassword">
+    <p class="error" id="signupError"></p>
 
-  <p class="error" id="signupError"></p>
-
-  <button onclick="handleSignup()">Submit</button>
-  <button class="secondary" onclick="goToLogin()">Cancel</button>
+    <button onclick="handleSignup()">Submit</button>
+    <button class="secondary" onclick="goToLogin()">Cancel</button>
+  </div>
 </div>
 
 <script src="../js/app.js"></script>

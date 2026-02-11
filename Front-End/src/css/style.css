@@ -1,13 +1,311 @@
-body { font-family: Arial, sans-serif; background:#f2f2f2; }
-.card { width: 400px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 6px; }
-label { display:block; margin-top:10px; }
-input { width:100%; margin-top:3px; padding:8px; }
-button { width:100%; margin-top:10px; padding:8px; }
-button.secondary { background:#ddd; }
-.error { color:red; font-size:12px; margin:0; }
-.notif { color:royalblue; font-size:12px; margin-bottom:0; display:none; text-align:center; }
-.top-buttons { display:flex; gap:5px; margin-bottom:20px; }
-.contact-item { background:#eee; padding:5px; margin-top:5px; cursor:pointer; border-radius:3px; }
-#emptyMessage { margin-top:10px; font-style:italic; }
-.form-container{ margin-bottom:10px; background: #fff; padding: 20px; }
-.text-box { width:100%; margin-top:3px; padding:8px; display:block; box-sizing:border-box; }
+
+
+:root{
+  --bg-1: #96daff;     /* light sky */
+  --bg-2: #b2b3ff;     /* lavender */
+  --bg-3: #e4c4fe;     /* mint */
+  --ink: #1f2937;      /* slate-ish */
+  --muted: #6b7280;
+
+  --card: rgba(255, 255, 255, 0.516);
+  --card-border: rgba(255,255,255,0.55);
+
+  --primary: #4f46e5;  /* indigo */
+  --primary-2: #7c3aed;/* purple */
+  --primary-soft: rgba(79, 70, 229, 0.12);
+
+  --input-bg: rgba(255,255,255,0.7);
+  --input-border: rgba(31,41,55,0.12);
+
+  --shadow: 0 18px 55px rgba(31, 41, 55, 0.12);
+  --shadow-soft: 0 10px 25px rgba(31, 41, 55, 0.10);
+
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body{
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  color: var(--ink);
+
+  /* Calm gradient background */
+  background: radial-gradient(1100px 600px at 20% 10%, var(--bg-1), transparent 60%),
+              radial-gradient(900px 500px at 85% 15%, var(--bg-2), transparent 55%),
+              radial-gradient(1000px 600px at 40% 90%, var(--bg-3), transparent 55%),
+              #ffdefc;
+
+  /* Gives the page breathing room on short screens */
+  min-height: 100vh;
+}
+
+/* Center the whole block (title + card) like your screenshot */
+.parent-container{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 16px;
+}
+
+/* Big calm title */
+.parent-container h1{
+  margin: 0;
+  font-size: clamp(28px, 3vw, 42px);
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  color: #111827;
+
+  /* Subtle "vibes" */
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* Glassy card */
+.card{
+  width: min(520px, 92vw);
+  margin: 0 auto; 
+  padding: 28px 28px 22px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+
+}
+
+
+/* Card title */
+.card h2{
+  margin: 4px 0 18px;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+/* Labels: clean + spaced */
+label{
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Inputs: rounded, soft, focus glow */
+.text-box,
+input{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  outline: none;
+  font-size: 14px;
+  color: var(--ink);
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.text-box:focus,
+input:focus{
+  border-color: rgba(79,70,229,0.45);
+  box-shadow: 0 0 0 4px var(--primary-soft);
+}
+
+/* Buttons: pill-ish, nice hover */
+button{
+display: block; 
+  margin: 0 auto; 
+  width: 60%;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .18s ease, filter .18s ease;
+}
+
+/* Primary button gradient */
+button:not(.secondary){
+  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: var(--shadow-soft);
+}
+
+button:not(.secondary):hover{
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+button:not(.secondary):active{
+  transform: translateY(0px);
+}
+
+/* Secondary button: calm neutral */
+button.secondary{
+  background: rgba(17,24,39,0.06);
+  color: #111827;
+  border: 1px solid rgba(17,24,39,0.10);
+  box-shadow: none;
+}
+
+button.secondary:hover{
+  background: rgba(17,24,39,0.08);
+}
+
+/* Errors + notif: cleaner */
+.error{
+  font-size: 16px;
+  color: #ef4444;
+}
+
+.notif{
+  margin-top: 12px;
+  font-size: 18px;
+  color: #2563eb;
+  display: none;
+  text-align: center;
+}
+
+
+/* =========================
+   CONTACTS PAGE OVERRIDES
+   ========================= */
+
+/* Stop centering ONLY on contacts page */
+body.contacts-page .parent-container{
+  justify-content: flex-start;   /* instead of center */
+  align-items: center;          /* card can align left naturally */
+  padding: 28px 32px;            /* more "app" padding */
+}
+
+/* Make the card feel like a page panel instead of a centered login card */
+body.contacts-page .card{
+  margin: 0;                     /* remove auto-centering */
+  width: min(700px, 80%);       /* wider dashboard feel */
+  position: relative;            /* needed so corner signout can anchor */
+}
+
+/* Put Sign Out in a corner */
+body.contacts-page .signout-corner{
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  width: auto;                   /* override global button width */
+  margin: 0;                     /* override global centering */
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* Make the action row look like a toolbar */
+body.contacts-page .top-buttons{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+/* Undo the global "button is block + 70% width" for toolbar buttons */
+body.contacts-page .top-buttons button{
+  width: 25%;
+  margin: 0;
+  display: inline-flex;
+  padding: 12px 16px;
+}
+
+/* Search input should look like a compact toolbar input */
+body.contacts-page #searchInput{
+  width: min(260px, 100%);
+  margin: 0;
+}
+
+/* =========================
+   CONTACT ITEM STYLING
+   ========================= */
+
+.contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+
+  padding: 16px 18px;
+  margin-top: 14px;
+
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: var(--shadow-soft);
+
+  backdrop-filter: blur(6px);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Contact text */
+.contact-item span {
+  font-size: 15px;
+  color: var(--ink);
+  flex: 1;
+}
+
+/* Edit button inside contact item */
+.contact-item > button {
+  width: auto;       /* override global 70% width */
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+/* When expanded into edit form */
+.contact-item label {
+  font-size: 14px;
+}
+
+.contact-item input {
+  margin-bottom: 8px;
+}
+
+.contact-item:has(label) {
+  display: block;
+  padding: 22px 22px 18px;
+
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.contact-item:has(label) input {
+  width: 100%;
+  margin: 0 0 10px 0;
+}
+
+.contact-item:has(label) label {
+  margin-top: 10px;
+  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.contact-item:has(label) button {
+  display: block;
+  width: 60%;
+  margin: 12px auto 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
