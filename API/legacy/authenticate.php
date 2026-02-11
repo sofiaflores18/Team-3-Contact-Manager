@@ -7,8 +7,8 @@ session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
 
 //Imports
-require "db.php";
-require "auxiliary.php";
+require "scripts/db.php";
+require "scripts/auxiliary.php";
 
 $info = getRequestInfo();
 

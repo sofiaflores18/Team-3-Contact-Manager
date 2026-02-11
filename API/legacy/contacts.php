@@ -1,8 +1,10 @@
 <?php
 session_start(); //use this so we can access $_SESSION
 header("Content-Type: application/json");
-require "db.php";
-require "auxiliary.php";
+
+//IMPORTS
+require "scripts/auxiliary.php";
+require "scripts/db.php";
 
 
 //Get information from the POST request
