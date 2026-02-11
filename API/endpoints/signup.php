@@ -16,9 +16,9 @@ function signup($info, $conn)
     $password_user = password_hash($info['password'], PASSWORD_DEFAULT);
 
     //DEBUG
-    echo $password_user;
-    echo $info['password'];
-
+    error_log("HASHED: " . $password_user);
+    error_log("INPUT: " . $info['password']);
+    
     $created = date('Y-m-d H:i:s'); 
 
     $stmt = $conn->prepare(

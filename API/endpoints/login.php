@@ -19,7 +19,12 @@ function login($info, $conn)
     if($num_results == 1) 
     {
         $row = $result->fetch_assoc();
-        echo $row['password_user'];
+
+        //DEBUG
+        error_log("INPUT: " . $password_user);
+        error_log("STORED: " . $row['password_user']);
+
+
         if(!password_verify($password_user, $row['password_user']))
         {
             echo json_encode([
