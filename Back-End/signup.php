@@ -8,6 +8,8 @@ error_reporting(E_ALL);
 
 header("Content-Type: application/json");
 
+$action = $info['action'] ?? '';
+
 //Signup function
 function signup()
 {
@@ -65,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST')
     exit;
 }
 
-$action = $info['action'] ?? '';
+
 signup();
 
 
