@@ -1,15 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-session_start(); //use this so we can access $_SESSION
-header("Content-Type: application/json");
-
 //Imports
-require "scripts/db.php";
-require "scripts/auxiliary.php";
-
+require "../default_endpoint.php";
 $info = getRequestInfo();
 
 $action = $info['action'] ?? '';
