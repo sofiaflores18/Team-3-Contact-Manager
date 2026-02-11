@@ -31,7 +31,7 @@ function getUserInfo($info, $conn)
 }
 
 //Main Function Logic
-    //If the request method used to this endpoint was not POST, then return error
+    //If the request method used to this endpoint was not GET, then return error
 if ($_SERVER['REQUEST_METHOD'] !== 'GET')
 {
     echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only GET is accepted"]);
