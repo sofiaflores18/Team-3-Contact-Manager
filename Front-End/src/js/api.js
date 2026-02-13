@@ -1,14 +1,15 @@
 // API Utility Functions
-const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/Back-End/';
+//const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/Back-End/';
+const API_BASE = 'http://localhost/Team-3-Contact-Manager/Back-End/';
 
 async function apiRequest(endpoint, data = {}) {
     try {
         const response = await fetch(API_BASE + endpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
             },
-            body: new URLSearchParams(data)
+            body: JSON.stringify(data)
         });
         
         return await response.json();

@@ -18,7 +18,7 @@ if ($conn->connect_error)
 
 else
 {
-   //echo "Connection to database succeeded!\n";
+  // echo "Connection to database succeeded!\n";
 }
 
 ?>
