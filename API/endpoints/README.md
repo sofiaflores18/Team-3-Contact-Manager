@@ -9,12 +9,21 @@
     "username":" ",
     "password":" "
 }
+### Returns JSOB object with user_id
+example:
+{"status":"success","message":"Login successful!","user_id":1}
+____
 
 ## POST http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/login.php
 {
     "username":" ",
     "password":" "
 }
+### Returns JSON object with user_id
+example:
+{"status":"success","message":"Login successful!","user_id":1}
+____
+
 
 ## POST http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/create_contact.php
 {
@@ -24,8 +33,11 @@
     "email":" ",
     "phone":" "
 }
-### Returns username and password [DEBUGGING ONLY]
+### Returns JSON object with contact_id
 example:
+{"status":"success","contact_id":1}
+____
+
 
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/read_contacts.php
 {
@@ -35,16 +47,26 @@ example:
 }
 ### Returns array of JSON objects, each object contains a contact
 example:
+[{"id": 1, "email": "contact1@gmail.com", "phone": "111-111-1111", "created": "2026-02-13 07:53:38.000000", "user_id": 1, "lastname": "contact1lastname", "firstname": "contact1"}]
+____
 
 
 ## PATCH http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/update_contact.php
+____
+
 
 ## DELETE http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/delete_contact.php
+____
+
 
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/search_for_contacts.php
+____
+
 
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/me.php
 {
     "user_id": int
 }
-### Returns username and password [DEBUGGING ONLY]
+### Returns JSON object with username and password [DEBUGGING ONLY]
+example:
+{"username":"testuser","password_hash":"$2y$12$reuMdiXfcWWMX4Uru2nSoexrtP1Q2UkuYsQ7cc9Oym7DqUhcEbQUO"}

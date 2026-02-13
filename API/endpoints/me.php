@@ -1,6 +1,13 @@
 <?php
 require "../default_endpoint.php";
 
+//If the request method used to this endpoint was not GET, then return error
+if ($_SERVER['REQUEST_METHOD'] !== 'GET')
+{
+    echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only GET is accepted"]);
+    exit;
+}
+
 function get_user_info($info, $conn)
 {
     $user_id = $info['user_id'];
@@ -28,14 +35,6 @@ function get_user_info($info, $conn)
         "username" => $user["username"],
         "password_hash" => $user["password_user"]
     ]);
-}
-
-//Main Function Logic
-    //If the request method used to this endpoint was not GET, then return error
-if ($_SERVER['REQUEST_METHOD'] !== 'GET')
-{
-    echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only GET is accepted"]);
-    exit;
 }
 
 get_user_info($info, $conn);
