@@ -1,5 +1,5 @@
 <?php
-require "./default_endpoint.php";
+require "../default_endpoint.php";
 
 //If the request method used to this endpoint was not GET, then return error
 if ($_SERVER['REQUEST_METHOD'] !== 'GET')
