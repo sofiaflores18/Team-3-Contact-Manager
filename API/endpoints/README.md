@@ -9,7 +9,7 @@
     "username":" ",
     "password":" "
 }
-### Returns JSOB object with user_id
+### Returns JSON object with user_id
 example:
 {"status":"success","message":"Login successful!","user_id":1}
 ____
