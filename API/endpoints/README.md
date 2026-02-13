@@ -56,6 +56,15 @@ ____
 
 
 ## DELETE http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/delete_contact.php
+{
+    "user_id":1,
+    "contact_id":7
+}
+### Returns success message
+example:
+{
+  "status": "success"
+}
 ____
 
 

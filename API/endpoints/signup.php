@@ -1,7 +1,5 @@
 <?php
-//Imports
 require "../default_endpoint.php";
-
 
 //If the request method used to this endpoint was not POST, then return error
 if ($_SERVER['REQUEST_METHOD'] !== 'POST')
