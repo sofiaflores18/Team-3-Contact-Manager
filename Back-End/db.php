@@ -1,4 +1,7 @@
 <?php
+header('Content-Type: application/json');
+ini_set('display_errors', 0); // This stops the <br /><b> errors from breaking your JSON
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -18,6 +21,6 @@ if ($conn->connect_error)
 
 else
 {
-  // echo "Connection to database succeeded!\n";
+   //echo "Connection to database succeeded!\n";
 }
 ?>

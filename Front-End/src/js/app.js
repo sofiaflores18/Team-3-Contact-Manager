@@ -179,6 +179,11 @@ function renderContacts(list = contacts) {
   const container = document.getElementById("contactList");
   const empty = document.getElementById("emptyMessage");
 
+  // Check if we are on the right page. If these don't exist, stop the function!
+  if (!container || !empty) {
+    return; 
+  }
+  
   container.innerHTML = "";
 
   if (!Array.isArray(list) || list.length === 0) {

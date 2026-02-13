@@ -11,13 +11,24 @@ async function apiRequest(endpoint, data = {}) {
             },
             body: JSON.stringify(data)
         });
+
+        // Get the response as text first so we can see what the server is saying(debugging)
+        const text = await response.text();
+        console.log("Raw Server Response:", text); 
+
+        try {
+            return JSON.parse(text);
+        } catch (jsonError) {
+            console.error('JSON Parse Error. The server sent back HTML/Text instead of JSON.');
+            return { status: 'error', message: 'Server sent invalid response' };
+        }
         
-        return await response.json();
     } catch (error) {
         console.error('API Error:', error);
         return { status: 'error', message: 'Network error' };
     }
 }
+
 
 // Auth functions
 async function signupAPI(userData) {
@@ -28,7 +39,6 @@ async function signupAPI(userData) {
     return await apiRequest('authenticate.php', data);
 }
 
-
 async function loginAPI(loginData) {
     const data = {
         action: 'login',
@@ -36,6 +46,7 @@ async function loginAPI(loginData) {
     };
     return await apiRequest('authenticate.php', data);
 }
+
 
 // Contact functions
 async function createContactAPI(contactData) {
