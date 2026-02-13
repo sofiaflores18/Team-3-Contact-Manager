@@ -18,6 +18,6 @@ if ($conn->connect_error)
 
 else
 {
-    echo "Connection to database succeeded!\n";
+    echo json_encode({"status"=>"success", "message"=>"Successful connection to mySQL database"});
 }
 ?>

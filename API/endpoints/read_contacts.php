@@ -13,10 +13,10 @@ function get_contacts($info, $conn)
 {
     //read contact logic
     $user_id = $info['user_id'];
-    $limit = $info['limit'] ?? 0; //limit is the amount of contacts you want to fetch from the database
+    $limit = $info['limit'] ?? 20; //limit is the amount of contacts you want to fetch from the database
 
     //offset is the amount we want to jump over. For example if the limit was 20, we have just read the first 20 contacts, offset should be 20 when moving forward
-    $offset = $info['offset'] ?? 20; 
+    $offset = $info['offset'] ?? 0; 
 
     $stmt = $conn->prepare("
     SELECT JSON_ARRAYAGG(
