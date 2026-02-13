@@ -20,5 +20,4 @@ else
 {
   // echo "Connection to database succeeded!\n";
 }
-
 ?>

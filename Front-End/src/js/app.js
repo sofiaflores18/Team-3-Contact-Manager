@@ -77,9 +77,10 @@ async function handleSignup() {
 }
  
 // --- CONTACTS ---
+// TODO: These two parts will probably need a rework when the API gets merged
 let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+// Only one contact can be edited or deleted at a time
 let editIndex = null;
-let deleteIndex = null;
 
 function saveContacts() {
   localStorage.setItem("contacts", JSON.stringify(contacts));
@@ -103,49 +104,75 @@ function clearAddForm() {
 }
 
 function submitAddContact() {
-  const f = document.getElementById("addFirstName").value.trim();
-  const l = document.getElementById("addLastName").value.trim();
-  const e = document.getElementById("addEmail").value.trim();
-  const p = document.getElementById("addPhone").value.trim();
+  const firstname = document.getElementById("addFirstName").value.trim();
+  const lastname = document.getElementById("addLastName").value.trim();
+  const email = document.getElementById("addEmail").value.trim();
+  const phone = document.getElementById("addPhone").value.trim();
   const error = document.getElementById("addError");
   error.innerText = "";
 
-  if (!f || !l || !e || !p) {
+  // Catch for if any of the fields are not filled in.
+  if (!firstname || !lastname || !email || !phone) {
     error.innerText = "All fields required";
     return;
   }
 
-  contacts.push({ firstName: f, lastName: l, email: e, phone: p, date: new Date().toLocaleDateString() });
+  // TODO: This should be replaced with something that communicates with the db.
+  contacts.push({
+    firstName: firstname,
+    lastName: lastname,
+    email: email,
+    phone: phone,
+    date: new Date().toLocaleDateString()
+  });
+
   saveContacts(); 
   closeAddForm();
-  clearAddForm();
   renderContacts();
 }
 
+// This creates the actual contact list division element to be displayed when
+// Any of the CRUD elements are used--Add, Search, Edit, and Delete respectively
+function renderContactItem(contact, index) {
+  const div = document.createElement("div");
+  div.className = "contact-item";
 
+  // If editIndex is a value that correlates to someone in the list,
+  // Then that contact is expanded into an edit form.
+  if (editIndex === index) {
+    const editForm = document.createElement("div");
+    editForm.innerHTML = `
+      <label>First Name</label>
+      <input type="text" class="text-box" value="${contact.firstName}" id="editFirstName${index}">
+      <label>Last Name</label>
+      <input type="text" class="text-box" value="${contact.lastName}" id="editLastName${index}">
+      <label>Email</label>
+      <input type="text" class="text-box" value="${contact.email}" id="editEmail${index}">
+      <label>Phone</label>
+      <input type="text" class="text-box" value="${contact.phone}" id="editPhone${index}">
+      <p class="error" id="editError${index}"></p>
+      <button onclick="submitEditContact()">Save</button>
+      <button onclick="cancelEditContact()" class="secondary">Cancel</button>
+      <button onclick="openDeleteModal(${index})" style="color: darkred" class="secondary">Delete</button>
+    `;
+    div.appendChild(editForm);
+  } else {
+    // All other contacts are displayed like usual.
+    const span = document.createElement("span");
+    span.innerText = `${contact.firstName} ${contact.lastName} - ${contact.phone} - ${contact.email}`;
 
+    const editButton = document.createElement("button");
+    editButton.innerText = "Edit";
+    editButton.onclick = () => {
+      editIndex = index;
+      renderContacts();
+    };
 
-function openEditForm(index) {
-  editIndex = index;
-  const c = contacts[index];
-  document.getElementById("editFirstName").value = c.firstName;
-  document.getElementById("editLastName").value = c.lastName;
-  document.getElementById("editEmail").value = c.email;
-  document.getElementById("editPhone").value = c.phone;
-  document.getElementById("editContactForm").classList.remove("hidden");
-}
+    div.appendChild(span);
+    div.appendChild(editButton);
+  }
 
-function closeEditForm() {
-  document.getElementById("editContactForm").classList.add("hidden");
-  clearEditForm();
-}
-
-function clearEditForm() {
-  document.getElementById("editFirstName").value = "";
-  document.getElementById("editLastName").value = "";
-  document.getElementById("editEmail").value = "";
-  document.getElementById("editPhone").value = "";
-  document.getElementById("editError").innerText = "";
+  return div;
 }
 
 function renderContacts(list = contacts) {
@@ -154,61 +181,55 @@ function renderContacts(list = contacts) {
 
   container.innerHTML = "";
 
-  if (list.length === 0) {
+  if (!Array.isArray(list) || list.length === 0) {
     empty.style.display = "block";
     return;
   }
 
   empty.style.display = "none";
 
-  list.forEach((c, index) => {
-    const div = document.createElement("div");
-    div.className = "contact-item";
-
-    const span = document.createElement("span");
-    span.innerText = `${c.firstName} ${c.lastName} - ${c.phone} -${c.email}`;
-
-    const delBtn = document.createElement("button");
-    delBtn.innerText = "Delete";
-    delBtn.onclick = (e) => {
-      e.stopPropagation();
-      openDeleteModal(index); 
-    };
-
-    const editBtn = document.createElement("Button");
-    editBtn.innerText = "Edit";
-    editBtn.onclick = () => 
-      {
-        openEditForm(index); 
-      }
-    div.appendChild(span);
-    div.appendChild(delBtn);
-    div.appendChild(editBtn);
-    container.appendChild(div);
+  list.forEach((contact, index) => {
+    const contactDiv = renderContactItem(contact, index);
+    container.appendChild(contactDiv);
   });
 }
 
+function cancelEditContact() {
+  editIndex = null;
+  renderContacts();
+}
+
 function submitEditContact() {
-  const f = document.getElementById("editFirstName").value.trim();
-  const l = document.getElementById("editLastName").value.trim();
-  const e = document.getElementById("editEmail").value.trim();
-  const p = document.getElementById("editPhone").value.trim();
-  const error = document.getElementById("editError");
+  // In case submit was somehow sent without a contact selected.
+  if (editIndex === null) return;
+
+  // Autofills the prompts with the current information for this index.
+  const firstname = document.getElementById(`editFirstName${editIndex}`).value.trim();
+  const lastname = document.getElementById(`editLastName${editIndex}`).value.trim();
+  const email = document.getElementById(`editEmail${editIndex}`).value.trim();
+  const phone = document.getElementById(`editPhone${editIndex}`).value.trim();
+  const error = document.getElementById(`editError${editIndex}`);
   error.innerText = "";
 
-  if (!f || !l || !e || !p) {
+  // Catch for if any of the fields are not filled in.
+  if (!firstname || !lastname || !email || !phone) {
     error.innerText = "All fields required";
     return;
   }
 
-  contacts[editIndex] = { ...contacts[editIndex], firstName: f, lastName: l, email: e, phone: p };
-  saveContacts(); 
-  closeEditForm();
+  contacts[editIndex] = { ...contacts[editIndex],
+    firstName: firstname,
+    lastName: lastname,
+    email: email,
+    phone: phone
+  };
+
+  editIndex = null;
+  saveContacts();
   renderContacts();
 }
 
-function openDeleteModal(index) {
-  deleteIndex = index;
+function openDeleteModal() {
   document.getElementById("deleteConfirmModal").classList.remove("hidden");
 }
 
@@ -217,28 +238,28 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
-  contacts.splice(deleteIndex, 1);
+  contacts.splice(editIndex, 1);
+  editIndex = null;
   saveContacts(); 
   closeDeleteModal();
   renderContacts();
 }
 
-
+// Gets the relevant contacts and presents them in the contact list container.
 function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
-  const container = document.getElementById("contactList");
 
   if (query === "") {
     renderContacts();
     return;
   }
 
-  const matches = contacts.filter(c =>
-    `${c.firstName} ${c.lastName}`.toLowerCase().includes(query)
+  const matches = contacts.filter(contact =>
+    `${contact.firstName} ${contact.lastName}`.toLowerCase().includes(query)
   );
 
   if (matches.length === 0) {
-    container.innerHTML = `<p class="error">No contacts match your search.</p>`;
+    document.getElementById("emptyMessage").innerText = "No contacts match your Search\n";
     return;
   }
 

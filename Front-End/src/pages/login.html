@@ -8,21 +8,23 @@
 </head>
 <body>
 
-<div class="card">
-  <h1>Contact Manager</h1>
+<div class="parent-container">
+  <h1 align="center">Contact Manager</h1>
+  <div class="card">
+    <h2 align="center">Login</h2>
 
-  <label>Email</label>
-  <input type="text" id="loginEmail">
-  <p class="error" id="loginEmailError"></p>
+    <label>Email</label>
+    <input type="text" class="text-box" id="loginEmail">
+    <p class="error" id="loginEmailError"></p>
 
-  <label>Password</label>
-  <input type="password" id="loginPassword">
-  <p class="error" id="loginPasswordError"></p>
+    <label>Password</label>
+    <input type="password" class="text-box" id="loginPassword">
+    <p class="error" id="loginPasswordError"></p>
 
-  <p class="error" id="loginServerError"></p>
+    <p class="error" id="loginServerError"></p>
 
-  <button onclick="handleLogin()">Log In</button>
-  <button class="secondary" onclick="goToSignup()">Sign Up</button>
+    <button onclick="handleLogin()">Log In</button>
+    <button class="secondary" onclick="goToSignup()">Sign Up</button>
 
   <p class="notif" id="accountCreatedNotif"></p>
 </div>

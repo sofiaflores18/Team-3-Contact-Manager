@@ -1,8 +1,13 @@
 <?php
 
 function getRequestInfo(){
-    return json_decode(file_get_contents("php://input"), true);
-}
+    try {
+        return json_decode(json: file_get_contents("php://input"), associative: true, flags: JSON_THROW_ON_ERROR);
+    } catch (JsonException $e) {
+        echo "JSON Request Error: " . $e->getMessage();
+    }
 
+    
+}
 
 ?>
