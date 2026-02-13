@@ -1,7 +1,14 @@
 <?php
-
 //Imports
 require "../default_endpoint.php";
+
+
+//If the request method used to this endpoint was not POST, then return error
+if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+{
+    echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only POST is accepted"]);
+    exit;
+}
 
 
 //Signup function
@@ -70,16 +77,5 @@ function signup($info, $conn)
 }
 
 
-//Main Function Logic
-    //If the request method used to this endpoint was not POST, then return error
-if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-{
-    echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only POST is accepted"]);
-    exit;
-}
-
-    //Otherwise, call the signup function
-
-$info = getRequestInfo();
 signup($info, $conn);
 ?>

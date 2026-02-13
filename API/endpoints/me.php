@@ -1,7 +1,7 @@
 <?php
 require "../default_endpoint.php";
 
-function getUserInfo($info, $conn)
+function get_user_info($info, $conn)
 {
     $user_id = $info['user_id'];
 
@@ -38,5 +38,5 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET')
     exit;
 }
 
-getUserInfo($info, $conn);
+get_user_info($info, $conn);
 ?>
