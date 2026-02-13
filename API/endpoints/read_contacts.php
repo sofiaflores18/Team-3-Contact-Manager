@@ -19,8 +19,9 @@ function get_contacts($info, $conn)
     $offset = $info['offset'] ?? 0; 
 
     $stmt = $conn->prepare("
-    SELECT JSON_ARRAYAGG(
-        JSON_OBJECT(
+    SELECT COALESCE(JSON_ARRAYAGG(contact_data), '[]') AS contacts
+    FROM (
+        SELECT JSON_OBJECT(
             'id', id,
             'firstname', firstname,
             'lastname', lastname,
@@ -28,11 +29,11 @@ function get_contacts($info, $conn)
             'phone', phone,
             'user_id', user_id,
             'created', created
-        )
-    ) AS contacts
-    FROM contacts
-    WHERE user_id = ?
-    LIMIT ? OFFSET ?
+        ) AS contact_data
+        FROM contacts
+        WHERE user_id = ?
+        LIMIT ? OFFSET ?
+    ) AS subquery
     ");
 
     $stmt->bind_param("iii", $user_id, $limit, $offset);
