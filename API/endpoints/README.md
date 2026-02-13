@@ -42,7 +42,7 @@ ____
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/read_contacts.php
 {
     "user_id":int,
-    "limit":int OPTIONAL,
+    "limit":int, OPTIONAL
     "offset:int OPTIONAL
 }
 ### Returns array of JSON objects, each object contains a contact
@@ -52,6 +52,19 @@ ____
 
 
 ## PATCH http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/update_contact.php
+{
+    "user_id":1,
+    "contact_id":3,
+    "firstname":" ", OPTIONAL
+    "lastname":" ", OPTIONAL
+    "email":" ", OPTIONAL
+    "phone":" "
+}
+### Returns success message
+example:
+{
+  "status": "success"
+}
 ____
 
 
