@@ -27,7 +27,7 @@ ____
 
 ## POST http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/create_contact.php
 {
-    "user_id": int,
+    "user_id":int,
     "firstname":" ",
     "lastname":" ",
     "email":" ",
@@ -41,9 +41,9 @@ ____
 
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/read_contacts.php
 {
-    "user_id": int,
-    "limit": int OPTIONAL,
-    "offset: int OPTIONAL
+    "user_id":int,
+    "limit":int OPTIONAL,
+    "offset:int OPTIONAL
 }
 ### Returns array of JSON objects, each object contains a contact
 example:
@@ -69,12 +69,30 @@ ____
 
 
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/search_for_contacts.php
+{
+    "user_id":int,
+    "firstname":" "
+}
+### Returns array of JSON objects, each object contains a contact
+example:
+[
+  {
+    "id": 3,
+    "email": "contact3@gmail.com",
+    "phone": "333-333-3333",
+    "created": "2026-02-13 07:53:58.000000",
+    "user_id": 1,
+    "lastname": "contact3lastname",
+    "firstname": "contact3"
+  }
+]
+
 ____
 
 
 ## GET http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/me.php
 {
-    "user_id": int
+    "user_id":int
 }
 ### Returns JSON object with username and password [DEBUGGING ONLY]
 example:
