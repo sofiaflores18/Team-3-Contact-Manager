@@ -1,4 +1,9 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Turn OFF HTML errors
+ini_set('log_errors', 1);      // Log them instead
+
 //Imports
 require "../default_endpoint.php";
 $info = getRequestInfo();
