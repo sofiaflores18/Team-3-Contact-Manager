@@ -27,7 +27,7 @@ async function handleLogin() {
 
   if (!email || !password) return;
 
-  const response = await fetch("api/login.php", {
+  const response = await fetch("/CONTACT-MANAGER/API/endpoints/login.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -106,33 +106,40 @@ function clearAddForm() {
   document.getElementById("addError").innerText = "";
 }
 
-function submitAddContact() {
+async function submitAddContact() {
   const firstname = document.getElementById("addFirstName").value.trim();
   const lastname = document.getElementById("addLastName").value.trim();
   const email = document.getElementById("addEmail").value.trim();
   const phone = document.getElementById("addPhone").value.trim();
-  const error = document.getElementById("addError");
-  error.innerText = "";
+  const user_id = localStorage.getItem("user_id");
 
-  // Catch for if any of the fields are not filled in.
   if (!firstname || !lastname || !email || !phone) {
-    error.innerText = "All fields required";
+    document.getElementById("addError").innerText = "All fields required";
     return;
   }
 
-  // TODO: This should be replaced with something that communicates with the db.
-  contacts.push({
-    firstName: firstname,
-    lastName: lastname,
-    email: email,
-    phone: phone,
-    date: new Date().toLocaleDateString()
+  const response = await fetch("CONTACT-MANAGER/API/endpoints/create_contact.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      firstname,
+      lastname,
+      email,
+      phone,
+      user_id
+    })
   });
 
-  saveContacts(); 
-  closeAddForm();
-  renderContacts();
+  const result = await response.json();
+
+  if (result.status === "success") {
+    closeAddForm();
+    alert("Contact saved to database!");
+  } else {
+    document.getElementById("addError").innerText = "Failed to save contact";
+  }
 }
+
 
 // This creates the actual contact list division element to be displayed when
 // Any of the CRUD elements are used--Add, Search, Edit, and Delete respectively
