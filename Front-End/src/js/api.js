@@ -1,5 +1,5 @@
 // --- Updated Path to include /endpoints/ ---
-const API_BASE = 'http://localhost/Team-3-Contact-Manager/Back-End/endpoints/';
+const API_BASE = 'http://localhost/CONTACT-MANAGER/API/endpoints/';
 
 async function apiRequest(endpoint, method = 'POST', data = {}) {
     try {
