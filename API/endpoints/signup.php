@@ -75,7 +75,7 @@ if (!$stmt) {
 }
 
 $stmt->bind_param(
-    "sssssis",
+    "sssssss",
     $firstname,
     $lastname,
     $username,

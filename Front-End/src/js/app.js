@@ -21,25 +21,28 @@ function handleReturnFromSignup() {
   sessionStorage.removeItem("accountCreated");
 }
 
-function handleLogin() {
+async function handleLogin() {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
 
-  document.getElementById("loginEmailError").innerText = "";
-  document.getElementById("loginPasswordError").innerText = "";
-  document.getElementById("loginServerError").innerText = "";
+  if (!email || !password) return;
 
-  if (!email || !password) {
-    if (!email) document.getElementById("loginEmailError").innerText = "Email required";
-    if (!password) document.getElementById("loginPasswordError").innerText = "Password required";
-    return;
-  }
+  const response = await fetch("api/login.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: email,   // change if you're using email instead
+      password: password
+    })
+  });
 
-  if (email && password) {
-    localStorage.setItem("user", JSON.stringify({ email }));
+  const result = await response.json();
+
+  if (result.status === "success") {
+    localStorage.setItem("user_id", result.user_id);
     window.location.href = "contact.html";
   } else {
-    document.getElementById("loginServerError").innerText = "Invalid login";
+    document.getElementById("loginServerError").innerText = result.message;
   }
 }
 //changed to async function to use API
