@@ -1,4 +1,4 @@
-import { searchContactsAPI } from "./api.js";
+// const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/';
 
 // --- LOGIN & SIGNUP ---
 let accountCreated = false;
@@ -265,15 +265,15 @@ function confirmDelete() {
 async function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
   const user_id = localStorage.getItem("user_id");
-  
-  contacts = JSON.parse(await searchContactsAPI(user_id, query));
+  console.log("Query = " + query);
+  console.log("User ID = " + user_id);
 
-//  if (query === "") {
-//    renderContacts();
-//    return;
-//  }
+  const response = await searchContactsAPI(user_id, query);
+  console.log(response);
 
+  contacts = JSON.parse(response);
   renderContacts();
+
 }
 
 function signOut() {

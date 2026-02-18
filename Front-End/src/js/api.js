@@ -1,26 +1,6 @@
 // --- Updated Path to include /endpoints/ ---
 const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/';
 
-export async function searchContactsAPI(userId, searchTerm) {
-    const params = new URLSearchParams({
-        user_id: userId,
-        // Ensure backend expects 'firstname' or update to 'search'
-        firstname: searchTerm 
-    });
-    
-    const response = await fetch(`${API_BASE}search_for_contacts.php?${params}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-    });
-    
-    const text = await response.text();
-    try {
-        return JSON.parse(text);
-    } catch (jsonError) {
-        return [];
-    }
-}
-
 async function apiRequest(endpoint, method = 'POST', data = {}) {
     try {
         const options = {
@@ -97,3 +77,24 @@ async function deleteContactAPI(contactId, userId) {
     return await apiRequest('delete_contact.php', 'DELETE', data);
 }
 
+async function searchContactsAPI(userId, searchTerm) {
+    const params = new URLSearchParams({
+        user_id: userId,
+        // Ensure backend expects 'firstname' or update to 'search'
+        firstname: searchTerm 
+    });
+    
+    const response = await fetch(`${API_BASE}search_for_contacts.php?${params}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    
+    console.log(response);
+    
+    const text = await response.text();
+    try {
+        return JSON.parse(text);
+    } catch (jsonError) {
+        return [];
+    }
+}
