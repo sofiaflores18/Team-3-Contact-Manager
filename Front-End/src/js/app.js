@@ -80,8 +80,7 @@ async function handleSignup() {
 }
  
 // --- CONTACTS ---
-// TODO: These two parts will probably need a rework when the API gets merged
-let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+let contacts = [];
 // Only one contact can be edited or deleted at a time
 let editIndex = null;
 
@@ -261,24 +260,19 @@ function confirmDelete() {
 }
 
 // Gets the relevant contacts and presents them in the contact list container.
+import {searchContactsAPI} from "./api.js";
 function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
+  const user_id = localStorage.getItem("user_id");
+  
+  contacts = JSON.parse(await searchContactsAPI(user_id, query));
 
-  if (query === "") {
-    renderContacts();
-    return;
-  }
+//  if (query === "") {
+//    renderContacts();
+//    return;
+//  }
 
-  const matches = contacts.filter(contact =>
-    `${contact.firstName} ${contact.lastName}`.toLowerCase().includes(query)
-  );
-
-  if (matches.length === 0) {
-    document.getElementById("emptyMessage").innerText = "No contacts match your Search\n";
-    return;
-  }
-
-  renderContacts(matches);
+  renderContacts();
 }
 
 function signOut() {

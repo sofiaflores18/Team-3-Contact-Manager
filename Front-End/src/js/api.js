@@ -77,7 +77,7 @@ async function deleteContactAPI(contactId, userId) {
     return await apiRequest('delete_contact.php', 'DELETE', data);
 }
 
-async function searchContactsAPI(userId, searchTerm) {
+export async function searchContactsAPI(userId, searchTerm) {
     const params = new URLSearchParams({
         user_id: userId,
         // Ensure backend expects 'firstname' or update to 'search'
