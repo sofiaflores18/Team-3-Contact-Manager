@@ -1,3 +1,5 @@
+import { searchContactsAPI } from "./api.js";
+
 // --- LOGIN & SIGNUP ---
 let accountCreated = false;
 
@@ -260,8 +262,7 @@ function confirmDelete() {
 }
 
 // Gets the relevant contacts and presents them in the contact list container.
-import {searchContactsAPI} from "./api.js";
-function searchContacts() {
+async function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
   const user_id = localStorage.getItem("user_id");
   
