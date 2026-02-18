@@ -1,5 +1,5 @@
 // --- Updated Path to include /endpoints/ ---
-const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/API/endpoints';
+const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/';
 
 async function apiRequest(endpoint, method = 'POST', data = {}) {
     try {
