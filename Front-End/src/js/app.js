@@ -27,7 +27,7 @@ async function handleLogin() {
 
   if (!email || !password) return;
 
-  const response = await fetch("http://localhost/CONTACT-MANAGER/API/endpoints/login.php", {
+  const response = await fetch("http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/login.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -118,7 +118,7 @@ async function submitAddContact() {
     return;
   }
 
-  const response = await fetch("http://localhost/CONTACT-MANAGER/API/endpoints/create_contact.php", {
+  const response = await fetch("http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/create_contact.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
