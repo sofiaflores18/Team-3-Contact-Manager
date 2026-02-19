@@ -86,10 +86,6 @@ let contacts = [];
 // Only one contact can be edited or deleted at a time
 let editIndex = null;
 
-function saveContacts() {
-  localStorage.setItem("contacts", JSON.stringify(contacts));
-}
-
 function openAddForm() {
   document.getElementById("addContactForm").classList.remove("hidden");
 }
@@ -232,16 +228,25 @@ function submitEditContact() {
     error.innerText = "All fields required";
     return;
   }
+	console.log("Before edit:")
+	console.log(contacts[editIndex]);
 
+  // id needs to be changed to be contact_id instead
   contacts[editIndex] = { ...contacts[editIndex],
-    firstName: firstname,
-    lastName: lastname,
+    firstname: firstname,
+    lastname: lastname,
     email: email,
-    phone: phone
+    phone: phone,
+    //contact_id: id
   };
+	console.log("After edit, before API call:")
+	console.log(contacts[editIndex]);
+
+
+  // This is where I'm gonna make the API call
+  updateContactAPI(contacts[editIndex]);
 
   editIndex = null;
-  saveContacts();
   renderContacts();
 }
 
@@ -254,9 +259,9 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
+  // TODO: This needs to be changed for an actual delete API call
   contacts.splice(editIndex, 1);
   editIndex = null;
-  saveContacts(); 
   closeDeleteModal();
   renderContacts();
 }

@@ -9,8 +9,13 @@ async function apiRequest(endpoint, method = 'POST', data = {}) {
                 'Content-Type': 'application/json',
             },
         };
+	
+	console.log("Inside API Request:");
+	console.log(data);
 
         if (method !== 'GET') {
+	    	console.log("INSIDE NOT-GET IF STATEMENT:");
+		console.log(data); // TEMPORARY TESTING WITH APP.JS
             options.body = JSON.stringify(data);
         }
 
