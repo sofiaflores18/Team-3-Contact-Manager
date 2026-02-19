@@ -78,7 +78,7 @@ async function updateContactAPI(contactData) {
 }
 
 async function deleteContactAPI(contactId, userId) {
-    const data = { contact_id: contactId, user_id: userId };
+    const data = { id: contactId, user_id: userId };
     return await apiRequest('delete_contact.php', 'DELETE', data);
 }
 
