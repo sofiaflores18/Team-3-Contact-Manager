@@ -231,13 +231,11 @@ function submitEditContact() {
 	console.log("Before edit:")
 	console.log(contacts[editIndex]);
 
-  // id needs to be changed to be contact_id instead
   contacts[editIndex] = { ...contacts[editIndex],
     firstname: firstname,
     lastname: lastname,
     email: email,
     phone: phone,
-    //contact_id: id
   };
 	console.log("After edit, before API call:")
 	console.log(contacts[editIndex]);
@@ -259,7 +257,9 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
-  // TODO: This needs to be changed for an actual delete API call
+  const contact_id = contacts[editIndex].id;
+  console.log("Contact ID to DELETE: " + contact_id);
+  // deleteContactAPI(contacts[editIndex].id);
   contacts.splice(editIndex, 1);
   editIndex = null;
   closeDeleteModal();

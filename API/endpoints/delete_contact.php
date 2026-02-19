@@ -12,14 +12,14 @@ function delete_contact($info, $conn)
 {
     //delete contact logic
     $user_id = $info['user_id'];
-    $contact_id = $info['contact_id'];
+    $id = $info['id'];
 
     $stmt = $conn->prepare("
     DELETE FROM contacts
     WHERE id = ? AND user_id = ?;
     ");
 
-    $stmt->bind_param("ii", $contact_id, $user_id);
+    $stmt->bind_param("ii", $id, $user_id);
     $stmt->execute();
 
     if ($stmt->affected_rows === 0) {
