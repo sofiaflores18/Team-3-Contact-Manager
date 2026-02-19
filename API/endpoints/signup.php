@@ -1,79 +1,120 @@
 <?php
+header('Content-Type: application/json');
+
 require "../default_endpoint.php";
 
-//If the request method used to this endpoint was not POST, then return error
-if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-{
-    echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only POST is accepted"]);
+/**
+ * Only allow POST requests
+ */
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode([
+        "status" => "error",
+        "message" => "Invalid request method. POST required."
+    ]);
     exit;
 }
 
+/**
+ * Read and decode JSON body
+ */
+$raw = file_get_contents("php://input");
+$info = json_decode($raw, true);
 
-//Signup function
-function signup($info, $conn)
-{
-    //signup logic
-    $firstname = $info['firstname'] ?? null;
-    $lastname = $info['lastname'] ?? null;
-    $username =  $info['username'] ?? null;
-    $email = $info['email'] ?? null;
-    $phone = $info['phone'] ?? null;
-    $password_user = password_hash($info['password'], PASSWORD_DEFAULT);
+if (!$info) {
+    http_response_code(400);
+    echo json_encode([
+        "status" => "error",
+        "message" => "Invalid JSON payload"
+    ]);
+    exit;
+}
 
-    //DEBUG
-    // echo json_encode([
-    //     "debug_hashed" => $password_user,
-    //     "debug_input" => $info['password']
-    // ]);
+/**
+ * Validate required fields
+ */
+$required = ['firstname', 'lastname', 'username', 'email', 'phone', 'password'];
+foreach ($required as $field) {
+    if (empty($info[$field])) {
+        http_response_code(422);
+        echo json_encode([
+            "status" => "error",
+            "message" => "Missing field: $field"
+        ]);
+        exit;
+    }
+}
 
-    $created = date('Y-m-d H:i:s'); 
+/**
+ * Sanitize + assign
+ */
+$firstname = trim($info['firstname']);
+$lastname  = trim($info['lastname']);
+$username  = trim($info['username']);
+$email     = trim($info['email']);
+$phone     = trim($info['phone']);
+$password  = password_hash($info['password'], PASSWORD_DEFAULT);
+$created   = date('Y-m-d H:i:s');
 
-    $stmt = $conn->prepare(
+/**
+ * Insert user
+ */
+$stmt = $conn->prepare(
     "INSERT INTO users 
-    (firstname, lastname, username, email, phone, password_user, created)
-    VALUES (?, ?, ?, ?, ?, ?, ?)"
-    );
+     (firstname, lastname, username, email, phone, password_user, created)
+     VALUES (?, ?, ?, ?, ?, ?, ?)"
+);
 
-    $stmt->bind_param(
-    "sssssss",  // all param bound as strings
+if (!$stmt) {
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error",
+        "message" => "Database prepare failed"
+    ]);
+    exit;
+}
+
+$stmt->bind_param(
+    "sssssss",
     $firstname,
     $lastname,
     $username,
     $email,
     $phone,
-    $password_user,
+    $password,
     $created
-    );
+);
 
-    if (!$stmt->execute())
-    {
-        if ($stmt->errno === 1062) 
-        { //1062 is the error code for duplicate entry
-            http_response_code(409);
-            echo json_encode([
-                "status" => "error",
-                "message" => "Username or email already exists"
-            ]);
-            }
-
-        else
-        {
-            echo "Error ({$stmt->errno}): " . $stmt->error;
-        }
+/**
+ * Execute and handle errors
+ */
+if (!$stmt->execute()) {
+    if ($stmt->errno === 1062) {
+        http_response_code(409);
+        echo json_encode([
+            "status" => "error",
+            "message" => "Username or email already exists"
+        ]);
+    } else {
+        http_response_code(500);
+        echo json_encode([
+            "status" => "error",
+            "message" => "Database error: " . $stmt->error
+        ]);
     }
-
-    //Store the user_id from the id generated when inserting this user into mysql
-    $user_id = $conn->insert_id;
-
     $stmt->close();
-
-    echo json_encode([
-        "status" => "success", 
-        "message" => "Account creation successful!", 
-        "user_id" => $user_id
-    ]);
+    exit;
 }
 
+/**
+ * Success
+ */
+$user_id = $conn->insert_id;
+$stmt->close();
 
-signup($info, $conn);
+echo json_encode([
+    "status" => "success",
+    "message" => "Account creation successful!",
+    "user_id" => $user_id
+]);
 ?>

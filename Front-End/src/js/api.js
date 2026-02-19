@@ -1,5 +1,5 @@
 // --- Updated Path to include /endpoints/ ---
-const API_BASE = 'http://localhost/Team-3-Contact-Manager/Back-End/endpoints/';
+const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/';
 
 async function apiRequest(endpoint, method = 'POST', data = {}) {
     try {
@@ -9,7 +9,7 @@ async function apiRequest(endpoint, method = 'POST', data = {}) {
                 'Content-Type': 'application/json',
             },
         };
-
+	
         if (method !== 'GET') {
             options.body = JSON.stringify(data);
         }
@@ -17,8 +17,6 @@ async function apiRequest(endpoint, method = 'POST', data = {}) {
         const response = await fetch(API_BASE + endpoint, options);
         const text = await response.text();
         
-        console.log("Raw Server Response:", text); 
-
         try {
             return JSON.parse(text);
         } catch (jsonError) {
@@ -73,7 +71,7 @@ async function updateContactAPI(contactData) {
 }
 
 async function deleteContactAPI(contactId, userId) {
-    const data = { contact_id: contactId, user_id: userId };
+    const data = { id: contactId, user_id: userId };
     return await apiRequest('delete_contact.php', 'DELETE', data);
 }
 

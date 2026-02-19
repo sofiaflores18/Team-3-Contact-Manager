@@ -25,7 +25,7 @@ function create_contact($info, $conn)
         ");
 
         $stmt->bind_param(
-            "ssssss",
+            "ssssis",
             $firstname,
             $lastname,
             $email,

@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 
 $host = "localhost";
 $user = "root";
-$password = "";
+$password = "team3";
 $db = "contactManager";
 
 $conn = new mysqli($host, $user, $password, $db);

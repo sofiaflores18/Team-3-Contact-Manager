@@ -45,7 +45,7 @@ function login($info, $conn)
         // matching user found
         $user_id = $row['id'];
 
-        echo json_encode(value: ["status" => "success", "message" => "Login successful!", "user_id" => $user_id]);
+        echo json_encode( value: ["status" => "success", "message" => "Login successful!", "user_id" => $user_id]);
     } 
 
     else if($num_results == 0) 

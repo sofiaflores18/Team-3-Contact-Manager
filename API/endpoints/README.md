@@ -25,7 +25,7 @@ example:
 ____
 
 
-## POST http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/create_contact.php
+## POST http://1g/Team-3-Contact-Manager/API/endpoints/create_contact.php
 {
     "user_id":int,
     "firstname":" ",
