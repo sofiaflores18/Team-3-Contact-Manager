@@ -143,7 +143,7 @@ async function submitAddContact() {
 
 
 // This creates the actual contact list division element to be displayed when
-// Any of the CRUD elements are used--Add, Search, Edit, and Delete respectively
+// Any of the CRUD elements are used--Submit(Add), Search, Edit, and Delete respectively
 function renderContactItem(contact, index) {
   const div = document.createElement("div");
   div.className = "contact-item";
@@ -186,7 +186,7 @@ function renderContactItem(contact, index) {
   return div;
 }
 
-function renderContacts(list = contacts) {
+function renderContacts() {
   const container = document.getElementById("contactList");
   const empty = document.getElementById("emptyMessage");
 
@@ -197,14 +197,14 @@ function renderContacts(list = contacts) {
   
   container.innerHTML = "";
 
-  if (!Array.isArray(list) || list.length === 0) {
+  if (!Array.isArray(contacts) || contacts.length === 0) {
     empty.style.display = "block";
     return;
   }
 
   empty.style.display = "none";
 
-  list.forEach((contact, index) => {
+  contacts.forEach((contact, index) => {
     const contactDiv = renderContactItem(contact, index);
     container.appendChild(contactDiv);
   });
@@ -268,14 +268,12 @@ async function searchContacts() {
   console.log("Query = " + query);
   console.log("User ID = " + user_id);
 
-  const response = await searchContactsAPI(user_id, query);
-  console.log(response);
+  contacts = await searchContactsAPI(user_id, query);
+  console.log(contacts);
 
-  contacts = JSON.parse(response);
   renderContacts();
-
 }
-
+// TODO: This supposed to say "user_id" and not "user", probably
 function signOut() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
