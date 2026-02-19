@@ -228,8 +228,6 @@ function submitEditContact() {
     error.innerText = "All fields required";
     return;
   }
-	console.log("Before edit:")
-	console.log(contacts[editIndex]);
 
   contacts[editIndex] = { ...contacts[editIndex],
     firstname: firstname,
@@ -237,11 +235,7 @@ function submitEditContact() {
     email: email,
     phone: phone,
   };
-	console.log("After edit, before API call:")
-	console.log(contacts[editIndex]);
 
-
-  // This is where I'm gonna make the API call
   updateContactAPI(contacts[editIndex]);
 
   editIndex = null;
@@ -258,8 +252,9 @@ function closeDeleteModal() {
 
 function confirmDelete() {
   const contact_id = contacts[editIndex].id;
-  console.log("Contact ID to DELETE: " + contact_id);
-  // deleteContactAPI(contacts[editIndex].id);
+  
+  deleteContactAPI(contacts[editIndex].id, localStorage.getItem("user_id"));
+  
   contacts.splice(editIndex, 1);
   editIndex = null;
   closeDeleteModal();
@@ -270,17 +265,14 @@ function confirmDelete() {
 async function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
   const user_id = localStorage.getItem("user_id");
-  console.log("Query = " + query);
-  console.log("User ID = " + user_id);
 
   contacts = await searchContactsAPI(user_id, query);
-  console.log(contacts);
 
+  editIndex = null;
   renderContacts();
 }
-// TODO: This supposed to say "user_id" and not "user", probably
 function signOut() {
-  localStorage.removeItem("user");
+  localStorage.removeItem("user_id");
   window.location.href = "login.html";
 }
 
