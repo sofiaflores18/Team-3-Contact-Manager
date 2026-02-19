@@ -1,3 +1,5 @@
+// const API_BASE = 'http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/';
+
 // --- LOGIN & SIGNUP ---
 let accountCreated = false;
 
@@ -93,14 +95,9 @@ async function handleSignup() {
 }
  
 // --- CONTACTS ---
-// TODO: These two parts will probably need a rework when the API gets merged
-let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+let contacts = [];
 // Only one contact can be edited or deleted at a time
 let editIndex = null;
-
-function saveContacts() {
-  localStorage.setItem("contacts", JSON.stringify(contacts));
-}
 
 function openAddForm() {
   document.getElementById("addContactForm").classList.remove("hidden");
@@ -155,7 +152,7 @@ async function submitAddContact() {
 
 
 // This creates the actual contact list division element to be displayed when
-// Any of the CRUD elements are used--Add, Search, Edit, and Delete respectively
+// Any of the CRUD elements are used--Submit(Add), Search, Edit, and Delete respectively
 function renderContactItem(contact, index) {
   const div = document.createElement("div");
   div.className = "contact-item";
@@ -166,9 +163,9 @@ function renderContactItem(contact, index) {
     const editForm = document.createElement("div");
     editForm.innerHTML = `
       <label>First Name</label>
-      <input type="text" class="text-box" value="${contact.firstName}" id="editFirstName${index}">
+      <input type="text" class="text-box" value="${contact.firstname}" id="editFirstName${index}">
       <label>Last Name</label>
-      <input type="text" class="text-box" value="${contact.lastName}" id="editLastName${index}">
+      <input type="text" class="text-box" value="${contact.lastname}" id="editLastName${index}">
       <label>Email</label>
       <input type="text" class="text-box" value="${contact.email}" id="editEmail${index}">
       <label>Phone</label>
@@ -182,7 +179,7 @@ function renderContactItem(contact, index) {
   } else {
     // All other contacts are displayed like usual.
     const span = document.createElement("span");
-    span.innerText = `${contact.firstName} ${contact.lastName} - ${contact.phone} - ${contact.email}`;
+    span.innerText = `${contact.firstname} ${contact.lastname} - ${contact.phone} - ${contact.email}`;
 
     const editButton = document.createElement("button");
     editButton.innerText = "Edit";
@@ -198,7 +195,7 @@ function renderContactItem(contact, index) {
   return div;
 }
 
-function renderContacts(list = contacts) {
+function renderContacts() {
   const container = document.getElementById("contactList");
   const empty = document.getElementById("emptyMessage");
 
@@ -209,14 +206,14 @@ function renderContacts(list = contacts) {
   
   container.innerHTML = "";
 
-  if (!Array.isArray(list) || list.length === 0) {
+  if (!Array.isArray(contacts) || contacts.length === 0) {
     empty.style.display = "block";
     return;
   }
 
   empty.style.display = "none";
 
-  list.forEach((contact, index) => {
+  contacts.forEach((contact, index) => {
     const contactDiv = renderContactItem(contact, index);
     container.appendChild(contactDiv);
   });
@@ -246,14 +243,15 @@ function submitEditContact() {
   }
 
   contacts[editIndex] = { ...contacts[editIndex],
-    firstName: firstname,
-    lastName: lastname,
+    firstname: firstname,
+    lastname: lastname,
     email: email,
-    phone: phone
+    phone: phone,
   };
 
+  updateContactAPI(contacts[editIndex]);
+
   editIndex = null;
-  saveContacts();
   renderContacts();
 }
 
@@ -266,36 +264,28 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
+  const contact_id = contacts[editIndex].id;
+  
+  deleteContactAPI(contacts[editIndex].id, localStorage.getItem("user_id"));
+  
   contacts.splice(editIndex, 1);
   editIndex = null;
-  saveContacts(); 
   closeDeleteModal();
   renderContacts();
 }
 
 // Gets the relevant contacts and presents them in the contact list container.
-function searchContacts() {
+async function searchContacts() {
   const query = document.getElementById("searchInput").value.toLowerCase();
+  const user_id = localStorage.getItem("user_id");
 
-  if (query === "") {
-    renderContacts();
-    return;
-  }
+  contacts = await searchContactsAPI(user_id, query);
 
-  const matches = contacts.filter(contact =>
-    `${contact.firstName} ${contact.lastName}`.toLowerCase().includes(query)
-  );
-
-  if (matches.length === 0) {
-    document.getElementById("emptyMessage").innerText = "No contacts match your Search\n";
-    return;
-  }
-
-  renderContacts(matches);
+  editIndex = null;
+  renderContacts();
 }
-
 function signOut() {
-  localStorage.removeItem("user");
+  localStorage.removeItem("user_id");
   window.location.href = "login.html";
 }
 

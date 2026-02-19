@@ -13,7 +13,7 @@ function update_contact($info, $conn){
     //update contact logic
 
     $user_id = $info['user_id'] ?? null; //User id
-    $id= $info['contact_id'] ?? null; //Contact id
+    $id= $info['id'] ?? null; //Contact id
     
     if (!$user_id) {
         echo json_encode(["status"=>"failed", "error"=>"User does not exist."]);
