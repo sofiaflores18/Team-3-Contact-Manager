@@ -10,20 +10,13 @@ async function apiRequest(endpoint, method = 'POST', data = {}) {
             },
         };
 	
-	console.log("Inside API Request:");
-	console.log(data);
-
         if (method !== 'GET') {
-	    	console.log("INSIDE NOT-GET IF STATEMENT:");
-		console.log(data); // TEMPORARY TESTING WITH APP.JS
             options.body = JSON.stringify(data);
         }
 
         const response = await fetch(API_BASE + endpoint, options);
         const text = await response.text();
         
-        console.log("Raw Server Response:", text); 
-
         try {
             return JSON.parse(text);
         } catch (jsonError) {
@@ -93,8 +86,6 @@ async function searchContactsAPI(userId, searchTerm) {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     });
-    
-    console.log(response);
     
     const text = await response.text();
     try {
