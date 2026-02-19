@@ -154,9 +154,9 @@ function renderContactItem(contact, index) {
     const editForm = document.createElement("div");
     editForm.innerHTML = `
       <label>First Name</label>
-      <input type="text" class="text-box" value="${contact.firstName}" id="editFirstName${index}">
+      <input type="text" class="text-box" value="${contact.firstname}" id="editFirstName${index}">
       <label>Last Name</label>
-      <input type="text" class="text-box" value="${contact.lastName}" id="editLastName${index}">
+      <input type="text" class="text-box" value="${contact.lastname}" id="editLastName${index}">
       <label>Email</label>
       <input type="text" class="text-box" value="${contact.email}" id="editEmail${index}">
       <label>Phone</label>
@@ -170,7 +170,7 @@ function renderContactItem(contact, index) {
   } else {
     // All other contacts are displayed like usual.
     const span = document.createElement("span");
-    span.innerText = `${contact.firstName} ${contact.lastName} - ${contact.phone} - ${contact.email}`;
+    span.innerText = `${contact.firstname} ${contact.lastname} - ${contact.phone} - ${contact.email}`;
 
     const editButton = document.createElement("button");
     editButton.innerText = "Edit";
