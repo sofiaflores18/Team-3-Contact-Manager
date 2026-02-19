@@ -1,5 +1,8 @@
 <?php
 require "../default_endpoint.php";
+header('Content-Type: application/json');
+echo json_encode(["status" => "debug", "message" => "UPDATED create_contact.php"]);
+exit;
 
 //If the request method used to this endpoint was not POST, then return error
 if ($_SERVER['REQUEST_METHOD'] !== 'POST')

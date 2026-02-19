@@ -60,7 +60,20 @@ async function handleSignup() {
     error.innerText = "All fields are required";
     return;
   }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  if (!emailRegex.test(email)){
+    error.innerText="Invalid email format";
+    return;
+  }
+
+  const phoneRegex= /\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
+  
+   if (!phoneRegex.test(phoneNumber)){
+    error.innerText="Invalid phone number format";
+    return;
+  }
     // Call API
     const result = await signupAPI({
         firstname: firstName,
