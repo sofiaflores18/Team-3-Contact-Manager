@@ -26,9 +26,25 @@ function handleReturnFromSignup() {
 async function handleLogin() {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
+  const emailError = document.getElementById("loginEmailError");
+  const passwordError = document.getElementById("loginPasswordError");
+  const serverError = document.getElementById("loginServerError");
 
-  if (!email || !password) return;
-
+  // Manages errors for if Email or Password isn't filled out.
+  // It's heavy, but it works so who cares. 
+  if (!email || !password) {
+    serverError.innerText = "";
+    if (!email) {
+      emailError.innerText = "Username is required";
+    } else { emailError.innerText = ""; }
+    if (!password) {
+      passwordError.innerText = "Password is required";
+    } else { passwordError.innerText = ""; }
+    return;
+  } else {
+    emailError.innerText = "";
+    passwordError.innerText = "";
+  }
   const response = await fetch("http://165.245.135.60/Team-3-Contact-Manager/API/endpoints/login.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
