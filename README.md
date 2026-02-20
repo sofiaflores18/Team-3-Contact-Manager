@@ -50,12 +50,12 @@ This project demonstrates full-stack development, remote server deployment, data
 
 1. Navigate to 
     - `http://165.245.135.60/Team-3-Contact-Manager/Front-End/src/pages/login.html`
-    - Create an account using Signup
-    - Login using the credientials you just created
-    - Add contact button to create new contacts
-    - Search to view all contacts, add some criteria to filter for specifics
-    - Edit contacts with the edit button
-        - Delete or save changed information with their respective buttons
+2. Create an account using Signup
+3. Login using the credientials you just created
+4.  Add contact button to create new contacts
+5.   Search to view all contacts, add some criteria to filter for specifics
+6.    Edit contacts with the edit button
+    - Delete or save changed information with their respective buttons
 
 ---
 
@@ -66,3 +66,4 @@ This project demonstrates full-stack development, remote server deployment, data
 2. Navigate to
     - ```cd \var\www\html\Team-3-Contact-Manager```
 3. Begin developing from the git repo
+
