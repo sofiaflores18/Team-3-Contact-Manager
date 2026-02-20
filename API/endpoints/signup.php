@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
+
+
 require "../default_endpoint.php";
 
 /**
@@ -52,7 +54,18 @@ $firstname = trim($info['firstname']);
 $lastname  = trim($info['lastname']);
 $username  = trim($info['username']);
 $email     = trim($info['email']);
+if(!filter_var($email, FILTER_VALIDATE_EMAIL)){   
+            echo json_encode(["status" => "error", "message" => "Invalid email format"]);
+            exit;
+        }
 $phone     = trim($info['phone']);
+if (!preg_match('/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/', $phone)) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Invalid phone number"
+    ]);
+    exit;
+}
 $password  = password_hash($info['password'], PASSWORD_DEFAULT);
 $created   = date('Y-m-d H:i:s');
 
