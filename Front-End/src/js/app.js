@@ -144,7 +144,8 @@ async function submitAddContact() {
 
   if (result.status === "success") {
     closeAddForm();
-    alert("Contact saved to database!");
+	  
+    //alert("Contact saved to database!");
   } else {
     document.getElementById("addError").innerText = "Failed to save contact";
   }
