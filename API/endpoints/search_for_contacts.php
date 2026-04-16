@@ -1,7 +1,7 @@
 <?php
 require "../default_endpoint.php";
 
-//If the request method used to this endpoint was not GET, then return error
+// If the request method used to this endpoint was not GET, then return error
 if ($_SERVER['REQUEST_METHOD'] !== 'GET')
 {
     echo json_encode(["status"=>"error", "message"=>"Invalid HTTP request, only GET is accepted"]);
@@ -10,9 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET')
 
 function search_for_contacts($info, $conn)
 {
-    //firstname search logic only
+    // search by first name or last name
     $user_id = $info['user_id'];
-    $search_term = "%" . ($info['firstname'] ?? '') . "%"; // "%" is the wildcard operator, like the kleene star in regex. It means 0 or more occurances of whatever characters
+
+    // Search term can be passed as firstname, or fallback to empty string
+    $search_term = "%" . ($info['firstname'] ?? '') . "%";
 
     $stmt = $conn->prepare("
     SELECT COALESCE(JSON_ARRAYAGG(contact_row), '[]') AS contacts
@@ -27,12 +29,12 @@ function search_for_contacts($info, $conn)
                 'created', created
             ) AS contact_row
             FROM contacts
-            WHERE user_id = ? 
-            AND firstname LIKE ?
+            WHERE user_id = ?
+            AND (firstname LIKE ? OR lastname LIKE ?)
         ) AS results
     ");
 
-    $stmt->bind_param("is", $user_id, $search_term);
+    $stmt->bind_param("iss", $user_id, $search_term, $search_term);
     $stmt->execute();
 
     $result = $stmt->get_result();
