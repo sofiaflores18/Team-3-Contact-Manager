@@ -309,3 +309,34 @@ body.contacts-page #searchInput{
   border-radius: 14px;
 }
 
+/* =========================
+   FAVORITE CONTACTS
+   ========================= */
+
+/* Star button: small, icon-only, no background */
+.star-btn {
+  width: auto !important;
+  margin: 0 !important;
+  padding: 6px 10px !important;
+  font-size: 18px;
+  line-height: 1;
+  border-radius: 999px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #d97706;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.25);
+  color: #b45309;
+  background: transparent !important;
+}
+
+/* Favorited contact card gets a warm left border accent */
+.contact-item--favorite {
+  border-left: 4px solid #f59e0b;
+  background: rgba(255, 237, 180, 0.45);
+}
+

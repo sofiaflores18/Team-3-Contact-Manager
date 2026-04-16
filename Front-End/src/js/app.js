@@ -86,6 +86,28 @@ let contacts = [];
 // Only one contact can be edited or deleted at a time
 let editIndex = null;
 
+// --- FAVORITES ---
+// Favorites are stored in localStorage as a Set of contact IDs
+function getFavorites() {
+  const stored = localStorage.getItem("favorite_contacts");
+  return stored ? new Set(JSON.parse(stored)) : new Set();
+}
+
+function saveFavorites(favSet) {
+  localStorage.setItem("favorite_contacts", JSON.stringify([...favSet]));
+}
+
+function toggleFavorite(contactId) {
+  const favs = getFavorites();
+  if (favs.has(contactId)) {
+    favs.delete(contactId);
+  } else {
+    favs.add(contactId);
+  }
+  saveFavorites(favs);
+  renderContacts();
+}
+
 function openAddForm() {
   document.getElementById("addContactForm").classList.remove("hidden");
 }
@@ -144,6 +166,10 @@ function renderContactItem(contact, index) {
   const div = document.createElement("div");
   div.className = "contact-item";
 
+  const favs = getFavorites();
+  const isFav = favs.has(contact.id);
+  if (isFav) div.classList.add("contact-item--favorite");
+
   // If editIndex is a value that correlates to someone in the list,
   // Then that contact is expanded into an edit form.
   if (editIndex === index) {
@@ -168,6 +194,13 @@ function renderContactItem(contact, index) {
     const span = document.createElement("span");
     span.innerText = `${contact.firstname} ${contact.lastname} - ${contact.phone} - ${contact.email}`;
 
+    const starButton = document.createElement("button");
+    starButton.className = "secondary star-btn";
+    starButton.setAttribute("aria-label", isFav ? "Remove from favorites" : "Add to favorites");
+    starButton.setAttribute("title", isFav ? "Remove from favorites" : "Add to favorites");
+    starButton.innerText = isFav ? "★" : "☆";
+    starButton.onclick = () => toggleFavorite(contact.id);
+
     const editButton = document.createElement("button");
     editButton.innerText = "Edit";
     editButton.onclick = () => {
@@ -176,6 +209,7 @@ function renderContactItem(contact, index) {
     };
 
     div.appendChild(span);
+    div.appendChild(starButton);
     div.appendChild(editButton);
   }
 
@@ -188,9 +222,9 @@ function renderContacts() {
 
   // Check if we are on the right page. If these don't exist, stop the function!
   if (!container || !empty) {
-    return; 
+    return;
   }
-  
+
   container.innerHTML = "";
 
   if (!Array.isArray(contacts) || contacts.length === 0) {
@@ -200,7 +234,15 @@ function renderContacts() {
 
   empty.style.display = "none";
 
-  contacts.forEach((contact, index) => {
+  // Sort so favorites appear at the top
+  const favs = getFavorites();
+  const sorted = [...contacts].sort((a, b) => {
+    const aFav = favs.has(a.id) ? 0 : 1;
+    const bFav = favs.has(b.id) ? 0 : 1;
+    return aFav - bFav;
+  });
+
+  sorted.forEach((contact, index) => {
     const contactDiv = renderContactItem(contact, index);
     container.appendChild(contactDiv);
   });
@@ -276,4 +318,10 @@ function signOut() {
   window.location.href = "login.html";
 }
 
-document.addEventListener("DOMContentLoaded", renderContacts);
+document.addEventListener("DOMContentLoaded", async () => {
+  const user_id = localStorage.getItem("user_id");
+  if (user_id && document.getElementById("contactList")) {
+    contacts = await searchContactsAPI(user_id, "");
+  }
+  renderContacts();
+});
